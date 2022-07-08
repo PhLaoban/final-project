@@ -42,6 +42,11 @@ type UserWithPasswordHash = User & {
   passwordHash: string;
 };
 
+export type Districts = {
+  id: number;
+  district: number;
+  name: string;
+};
 // Function to store user in users table (for registration)
 export async function createUser(username: string, passwordHash: string) {
   const [user] = await sql<[User]>`
@@ -152,4 +157,12 @@ export async function deleteExpiredSessions() {
   `;
 
   return sessions.map((session) => camelcaseKeys(session));
+}
+
+// get districts from database
+export async function getDistricts() {
+  const districts = await sql<[Districts[]]>`
+  SELECT * FROM districts
+  `;
+  return districts.map((district) => camelCase(district));
 }

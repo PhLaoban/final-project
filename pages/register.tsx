@@ -37,7 +37,6 @@ export default function Register() {
     } else {
       await router.push(`/`);
     }
-    // await router.push('/');
   }
 
   return (
@@ -74,22 +73,22 @@ export default function Register() {
   );
 }
 
-// export function getServerSideProps(context: GetServerSidePropsContext) {
-//   // Redirect from HTTP to HTTPS on Heroku
-//   if (
-//     context.req.headers.host &&
-//     context.req.headers['x-forwarded-proto'] &&
-//     context.req.headers['x-forwarded-proto'] !== 'https'
-//   ) {
-//     return {
-//       redirect: {
-//         destination: `https://${context.req.headers.host}/register`,
-//         permanent: true,
-//       },
-//     };
-//   }
+export function getServerSideProps(context: GetServerSidePropsContext) {
+  // Redirect from HTTP to HTTPS on Heroku
+  if (
+    context.req.headers.host &&
+    context.req.headers['x-forwarded-proto'] &&
+    context.req.headers['x-forwarded-proto'] !== 'https'
+  ) {
+    return {
+      redirect: {
+        destination: `https://${context.req.headers.host}/register`,
+        permanent: true,
+      },
+    };
+  }
 
-//   return {
-//     props: {},
-//   };
-// }
+  return {
+    props: {},
+  };
+}

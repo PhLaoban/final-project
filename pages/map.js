@@ -1,10 +1,22 @@
 import { css } from '@emotion/react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { Status, Wrapper } from '@googlemaps/react-wrapper';
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxList,
+  ComboboxOption,
+  ComboboxPopover,
+} from '@reach/combobox';
 import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
 import mapboxgl from 'mapbox-gl';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import usePlacesAutocomplete, {
+  getGeocode,
+  getLatLng,
+} from 'use-places-autocomplete';
+import { getDistricts } from '../util/database';
 
 const mapContainerStyle = {
   maxWidth: '70vw',
@@ -25,15 +37,47 @@ const optionsDiv = css`
   width: 100px;
 `;
 
+const descriptionDiv = (isColor) => css`
+  display: flex;
+
+  background-color: ${isColor ? 'white' : 'limegreen'};
+  color: black;
+  width: 50vw;
+  margin: 10px auto;
+`;
+
+const mainDiv = css`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 50%;
+  min-height: 50%;
+`;
+
 const libraries = ['places'];
 
-const options = { disableDefaultUI: true, zoomControl: true };
+const options = {
+  disableDefaultUI: false,
+  zoomControl: true,
+};
+
+const myDivStyles = (checkedButton) => css`
+  border-radius: 5px;
+  color: ${checkedButton ? '#000000' : '#ffffff'};
+  width: 50vw;
+  margin: 10px auto;
+`;
 
 export default function Map(props) {
   const [parking, setParking] = useState();
 
   const [loading, setLoading] = useState(true);
-  const [checked, setChecked] = useState(3);
+  const [checkedButton, setCheckedButton] = useState(24);
+  const [lat, setLat] = useState(48.2083);
+  const [lng, setLng] = useState(16.3731);
+  const [zoomIn, setZoomIn] = useState(14);
+  const [isColor, setIsColor] = useState(false);
+  const [selected, setSelected] = useState();
 
   console.log('log from parking', parking);
 
@@ -41,6 +85,16 @@ export default function Map(props) {
     googleMapsApiKey: props.googleAPI,
     libraries,
   });
+
+  // handleProductSelect(productId);
+  // {
+  //   const { borderColor } = this.state;
+  //   let newBorderColour = borderColor === 'white' ? 'blue' : 'white';
+  //   this.setState({
+  //     borderColor: newBorderColour,
+  //     active_id: productId,
+  //   });
+  // }
 
   const url =
     'https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:BEHINDERTENPARKPLATZOGD&srsName=EPSG:4326&outputFormat=json';
@@ -56,26 +110,10 @@ export default function Map(props) {
     getParking().catch(() => {});
   }, []);
 
-  const mappingCoordinates =
-    parking &&
-    parking.features.map((item) => {
-      return (
-        <Marker
-          key={item.id}
-          position={{
-            lat: item.geometry.coordinates[1],
-            lng: item.geometry.coordinates[0],
-          }}
-        />
-      );
-    });
-  if (!mappingCoordinates) return 'loading!';
-
-  // const mappingDistricts =
-  //   parking &&
-  //   parking.features.map((item) => {
-  //     return <option key={item.id}>{item.properties.BEZIRK}</option>;
-  //   });
+  const mapRef = useRef();
+  const onMapLoad = useCallback((map) => {
+    mapRef.current = map;
+  }, []);
 
   const mappingDistricts =
     parking &&
@@ -86,42 +124,16 @@ export default function Map(props) {
   if (!mappingDistricts) return 'loading!';
 
   const description = parking.features.filter(
-    (park) => park.properties.BEZIRK === Number(checked),
+    (park) => park.properties.BEZIRK === Number(checkedButton),
   );
-
-  // const description = parking.features.find((item) => {
-  //   console.log('item.Bezirk', item.properties.BEZIRK);
-  //   console.log('dropdown', dropdown);
-  //   return item.properties.BEZIRK === Number(dropdown);
-  // });
 
   console.log('description', description);
 
-  // function descriptionTime() {
-  //   if (description.properties.ZEITRAUM == null || undefined) {
-  //     return '';
-  //   } else {
-  //     return <div> Time-Range: {description.properties.ZEITRAUM} </div>;
-  //   }
-  // }
-
-  // const tryOut = descriptionTime();
-
-  // console.log('from dropdown', dropdown);
-  // console.log('parking.features', parking.features);
-
-  // const NewMappingDistricts = mappingDistricts.filter((element, index) => {
-  //   return mappingDistricts.indexOf(element) !== index;
-  // });
-
   if (!mappingDistricts) return 'loading!';
 
-  // console.log('from mapping', mappingCoordinates);
-  // console.log('from mappingDistricts', mappingDistricts);
-
   const center = {
-    lat: 48.2083,
-    lng: 16.3731,
+    lat: lat,
+    lng: lng,
   };
 
   if (loadError) return 'Error loading maps';
@@ -132,48 +144,72 @@ export default function Map(props) {
       {loading ? 'Loading...' : ''}
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
-        zoom={16}
+        zoom={zoomIn}
         center={center}
         options={options}
+        onLoad={onMapLoad}
       >
-        {mappingCoordinates}
+        <Marker
+          position={{
+            lat: lat,
+            lng: lng,
+          }}
+        />
       </GoogleMap>
       {loading ? 'Loading...' : ''}
-      <input
-        type="checkbox"
-        onChange={(event) => {
-          setChecked(event.currentTarget.value);
-        }}
-        value={1}
-      />{' '}
-      1 |
-      <input
-        type="checkbox"
-        onChange={(event) => {
-          setChecked(event.currentTarget.value);
-        }}
-        value={2}
-      />{' '}
-      2 |
-      <input type="checkbox" value={3} /> 3 |
-      <input type="checkbox" /> 4 |
-      <div>
-        {description.map((item) => {
-          return (
-            <div key={item.id}>
-              {item.properties.STRNAM} {item.properties.ONR_VON}
-            </div>
-          );
-        })}
+      <div css={mainDiv}>
+        <select
+          onChange={(event) => {
+            setCheckedButton(event.currentTarget.value);
+          }}
+        >
+          {props.districts.map((item) => (
+            <option key={item.district} value={item.district}>
+              {item.district} {item.name}
+            </option>
+          ))}
+        </select>
+        <div>
+          {description.map((item) => {
+            return checkedButton < 24 ? (
+              <div>
+                {/* <div key={item.id} css={descriptionDiv}> */}
+                <div key={item.id} className={item.id}>
+                  {' '}
+                  <ul>
+                    <li>
+                      {' '}
+                      {item.properties.STRNAM} {item.properties.ONR_VON}
+                      {item.properties.BESCHREIBUNG}{' '}
+                    </li>
+                    <button
+                      onClick={() => {
+                        setLat(item.geometry.coordinates[1]);
+                        setLng(item.geometry.coordinates[0]);
+                        setZoomIn(14);
+                        setIsColor(!isColor);
+                      }}
+                    >
+                      Show on Map
+                    </button>
+                  </ul>
+                </div>
+              </div>
+            ) : (
+              ''
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 }
 
-export function getServerSideProps(context) {
+export async function getServerSideProps(context) {
+  const districts = await getDistricts();
   const googleAPI = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
   return {
-    props: { googleAPI },
+    props: { googleAPI, districts },
   };
 }
