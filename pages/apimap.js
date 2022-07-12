@@ -14,22 +14,23 @@ const justify = css`
 export default function Map(props) {
   const [parking, setParking] = useState();
   const [loading, setLoading] = useState(true);
-  const [checkedButton, setCheckedButton] = useState(3);
+  const [checkedButton, setCheckedButton] = useState(24);
+  const [button, setButton] = useState('how are you?');
 
   // console.log('log from parking', parking);
 
   const url =
     'https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:BEHINDERTENPARKPLATZOGD&srsName=EPSG:4326&outputFormat=json';
 
-  // useEffect(() => {
-  //   async function getParking() {
-  //     const response = await fetch(url);
-  //     const data = await response.json();
-  //     setLoading(false);
-  //     setParking(data);
-  //   }
-  //   getParking().catch(() => {});
-  // }, []);
+  useEffect(() => {
+    async function getParking() {
+      const response = await fetch(url);
+      const data = await response.json();
+      setLoading(false);
+      setParking(data);
+    }
+    getParking().catch(() => {});
+  }, []);
 
   const mappingDistricts =
     parking &&
@@ -44,27 +45,6 @@ export default function Map(props) {
   );
 
   console.log('description', description);
-
-  function radioButtonLoop() {
-    const radioButton = [];
-    for (let i = 1; i < 24; i++) {
-      radioButton.push(
-        <option
-          onChange={(event) => {
-            setCheckedButton(event.currentTarget.value);
-          }}
-          value={[i]}
-        >
-          {i}
-        </option>,
-      );
-    }
-    return (
-      <div>
-        <select>{radioButton}</select>
-      </div>
-    );
-  }
 
   // const districts = [
   //   { id: 1, District: 1, Name: 'Innere Stadt 1010 Vienna' },
@@ -108,19 +88,33 @@ export default function Map(props) {
         ))}
       </select>
 
-      <div>
-        {description.map((item) => {
-          return (
-            <div key={item.id}>
+      <button
+        onClick={() => {
+          setButton('I am fine thanks');
+        }}
+      >
+        Hey
+      </button>
+      {button}
+
+      {checkedButton < 24 ? (
+        <div>
+          <input />
+          {description.map((item) => {
+            return (
               <div key={item.id}>
-                {' '}
-                {item.properties.STRNAM} {item.properties.ONR_VON}
-                {item.properties.BESCHREIBUNG}
+                <div key={item.id}>
+                  {' '}
+                  {item.properties.STRNAM} {item.properties.ONR_VON}
+                  {item.properties.BESCHREIBUNG}
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      ) : (
+        ''
+      )}
     </div>
   );
 }

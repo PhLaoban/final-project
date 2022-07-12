@@ -45,6 +45,8 @@ function MyApp({ Component, pageProps }) {
             box-sizing: border-box;
           }
         `}
+        const
+        divStyle={css``}
       />
       <Layout user={user}>
         <Component {...pageProps} refreshUserProfile={refreshUserProfile} />

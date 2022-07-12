@@ -4,7 +4,11 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { RegisterResponseBody } from './api/register';
 
-export default function Register() {
+type Props = {
+  refreshUserProfile: () => Promise<void>;
+};
+
+export default function Register(props: Props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<
@@ -31,10 +35,16 @@ export default function Register() {
       setErrors(registerResponeBody.errors);
     }
     const returnTo = router.query.returnTo;
-    console.log(returnTo);
-    if (returnTo && !Array.isArray(returnTo)) {
+
+    if (
+      returnTo &&
+      !Array.isArray(returnTo) &&
+      /^\/[a-zA-Z0-9-?=/]*$/.test(returnTo)
+    ) {
+      await props.refreshUserProfile();
       await router.push(returnTo);
     } else {
+      await props.refreshUserProfile();
       await router.push(`/`);
     }
   }

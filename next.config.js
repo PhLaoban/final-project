@@ -5,3 +5,5 @@ const nextConfig = {
     emotion: true,
   },
 };
+
+module.exports = nextConfig;

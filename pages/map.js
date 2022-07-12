@@ -2,13 +2,11 @@ import { css } from '@emotion/react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { Status, Wrapper } from '@googlemaps/react-wrapper';
 import {
-  Combobox,
-  ComboboxInput,
-  ComboboxList,
-  ComboboxOption,
-  ComboboxPopover,
-} from '@reach/combobox';
-import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
+  GoogleMap,
+  Marker,
+  MarkerF,
+  useLoadScript,
+} from '@react-google-maps/api';
 import mapboxgl from 'mapbox-gl';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -68,6 +66,10 @@ const myDivStyles = (checkedButton) => css`
   margin: 10px auto;
 `;
 
+const liStyles = (item) => css`
+  background-color: ${item.state ? 'yellow' : 'white'};
+`;
+
 export default function Map(props) {
   const [parking, setParking] = useState();
 
@@ -77,7 +79,34 @@ export default function Map(props) {
   const [lng, setLng] = useState(16.3731);
   const [zoomIn, setZoomIn] = useState(14);
   const [isColor, setIsColor] = useState(false);
-  const [selected, setSelected] = useState();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [stateDescriptionHook, setStateDescriptionHook] = useState();
+  //   const [errors, setErrors] = useState<
+  //   {
+  //     message
+  //   }[]
+  // >([]);
+
+  async function addToFavorites(item) {
+    const registerResponse = await fetch('/api/favorites', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        location_id: item.id,
+        latitude: item.geometry.coordinates[1],
+        longitude: item.geometry.coordinates[0],
+        streetname: item.properties.STRNAM,
+        number: item.properties.ONR_VON,
+      }),
+    });
+    const registerResponseBody = await registerResponse.json();
+    console.log(registerResponseBody);
+    if ('errors' in registerResponseBody) {
+      // setErrors(registerResponeBody.errors);
+    }
+  }
 
   console.log('log from parking', parking);
 
@@ -126,10 +155,13 @@ export default function Map(props) {
   const description = parking.features.filter(
     (park) => park.properties.BEZIRK === Number(checkedButton),
   );
-
+  description.sort();
   console.log('description', description);
+  const stateDescription = description.map((item) => {
+    return { ...item, state: false };
+  });
 
-  if (!mappingDistricts) return 'loading!';
+  console.log('stateDescription', stateDescription);
 
   const center = {
     lat: lat,
@@ -149,7 +181,7 @@ export default function Map(props) {
         options={options}
         onLoad={onMapLoad}
       >
-        <Marker
+        <MarkerF
           position={{
             lat: lat,
             lng: lng,
@@ -159,6 +191,7 @@ export default function Map(props) {
       {loading ? 'Loading...' : ''}
       <div css={mainDiv}>
         <select
+          placeholder="Districts"
           onChange={(event) => {
             setCheckedButton(event.currentTarget.value);
           }}
@@ -169,37 +202,68 @@ export default function Map(props) {
             </option>
           ))}
         </select>
-        <div>
-          {description.map((item) => {
-            return checkedButton < 24 ? (
-              <div>
-                {/* <div key={item.id} css={descriptionDiv}> */}
-                <div key={item.id} className={item.id}>
-                  {' '}
-                  <ul>
-                    <li>
+        {checkedButton < 24 ? (
+          <div>
+            <input
+              onChange={(event) => {
+                setSearchTerm(event.currentTarget.value);
+              }}
+            />
+            {stateDescription
+              .filter((val) => {
+                if (searchTerm === '') {
+                  return val;
+                } else if (
+                  val.properties.STRNAM.toLowerCase().includes(
+                    searchTerm.toLowerCase(),
+                  )
+                ) {
+                  return val;
+                }
+              })
+              .map((item) => {
+                return checkedButton < 24 ? (
+                  <div css={liStyles(item)}>
+                    {/* <div key={item.id} css={descriptionDiv}> */}
+                    <div key={item.id}>
                       {' '}
-                      {item.properties.STRNAM} {item.properties.ONR_VON}
-                      {item.properties.BESCHREIBUNG}{' '}
-                    </li>
-                    <button
-                      onClick={() => {
-                        setLat(item.geometry.coordinates[1]);
-                        setLng(item.geometry.coordinates[0]);
-                        setZoomIn(14);
-                        setIsColor(!isColor);
-                      }}
-                    >
-                      Show on Map
-                    </button>
-                  </ul>
-                </div>
-              </div>
-            ) : (
-              ''
-            );
-          })}
-        </div>
+                      <ul>
+                        <li key={item.id}>
+                          {' '}
+                          {item.properties.STRNAM} {item.properties.ONR_VON}
+                          {item.properties.BESCHREIBUNG}
+                          {item.properties.ZEITRAUM}
+                          {item.properties.KATEGORIE_TXT}
+                        </li>
+                        <button
+                          onClick={() => {
+                            setLat(item.geometry.coordinates[1]);
+                            setLng(item.geometry.coordinates[0]);
+                            setZoomIn(14);
+                            // stateDescription.map((clicked) => {
+                            //   if (item.id === clicked.id) {
+                            return { ...item, state: true };
+                            // }
+                            // }
+                            // );
+                          }}
+                        >
+                          Show on Map
+                        </button>
+                        <button onClick={() => addToFavorites(item)}>
+                          Add to favorites
+                        </button>
+                      </ul>
+                    </div>
+                  </div>
+                ) : (
+                  ''
+                );
+              })}
+          </div>
+        ) : (
+          ''
+        )}
       </div>
     </div>
   );

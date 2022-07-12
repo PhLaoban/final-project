@@ -47,6 +47,16 @@ export type Districts = {
   district: number;
   name: string;
 };
+
+export type Favorites = {
+  id: number;
+  user_id: number;
+  location_id: string;
+  latitude: string;
+  longitude: string;
+  streetname: string;
+  number: string;
+}[];
 // Function to store user in users table (for registration)
 export async function createUser(username: string, passwordHash: string) {
   const [user] = await sql<[User]>`
@@ -165,4 +175,48 @@ export async function getDistricts() {
   SELECT * FROM districts
   `;
   return districts.map((district) => camelCase(district));
+}
+
+export async function getFavorites(userId: number) {
+  const favorites = await sql<[Favorites[]]>`
+    SELECT
+    id,
+    location_id,
+    latitude,
+    longitude,
+    streetname,
+    number
+
+    FROM
+      favorites
+    WHERE
+      user_id = ${userId}
+  `;
+  return favorites && camelcaseKeys(favorites);
+}
+
+export async function createFavorite(
+  user_id: number,
+  location_id: string,
+  latitude: string,
+  longitude: string,
+  streetname: string,
+  number: string,
+) {
+  const [favorites] = await sql<[Favorites]>`
+  INSERT INTO favorites
+    (user_id, location_id, latitude, longitude, streetname, number )
+  VALUES
+    (${user_id}, ${location_id}, ${latitude}, ${longitude}, ${streetname}, ${number})
+  RETURNING
+    *
+  `;
+  return camelcaseKeys(favorites);
+}
+
+export async function removeFromFavorites(id: string) {
+  await sql`
+  DELETE FROM favorites
+  WHERE  id = ${id}
+`;
 }
