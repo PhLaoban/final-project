@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import {
   createFavorite,
   getUserByValidSessionToken,
-  removeFromFavorites,
 } from '../../util/database';
 
 export type RegisterResponseBody = {

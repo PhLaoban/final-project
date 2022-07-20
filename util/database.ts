@@ -2,8 +2,10 @@ import camelCase from 'camelcase-keys';
 import camelcaseKeys from 'camelcase-keys';
 import { config } from 'dotenv-safe';
 import postgres from 'postgres';
+import setPostgresDefaultsOnHeroku from './setPostgresDefaultsOnHeroku';
 
-// ------------------- CONNECT TO DATABASE -------------------
+setPostgresDefaultsOnHeroku();
+
 config();
 // Type needed for the connection function below
 declare module globalThis {
@@ -56,6 +58,13 @@ export type Favorites = {
   longitude: string;
   streetname: string;
   number: string;
+}[];
+
+export type Reviews = {
+  id: number;
+  user_id: number;
+  location_id: string;
+  review: string;
 }[];
 // Function to store user in users table (for registration)
 export async function createUser(username: string, passwordHash: string) {
@@ -192,7 +201,7 @@ export async function getFavorites(userId: number) {
     WHERE
       user_id = ${userId}
   `;
-  return favorites && camelcaseKeys(favorites);
+  return camelcaseKeys(favorites);
 }
 
 export async function createFavorite(
@@ -214,9 +223,43 @@ export async function createFavorite(
   return camelcaseKeys(favorites);
 }
 
-export async function removeFromFavorites(id: string) {
-  await sql`
+export async function removeFromFavorites(id: number) {
+  const removeFavorites = await sql<[Favorites]>`
   DELETE FROM favorites
   WHERE  id = ${id}
+  RETURNING
+  *
 `;
+  return camelcaseKeys(removeFavorites);
+}
+
+export async function createReviews(
+  user_id: number,
+  location_id: string,
+  review: string,
+) {
+  const [reviews] = await sql<[Reviews]>`
+  INSERT INTO reviews
+    (user_id, location_id, review )
+  VALUES
+    (${user_id}, ${location_id}, ${review})
+  RETURNING
+    *
+  `;
+  return camelcaseKeys(reviews);
+}
+
+export async function getReviews(userId: number) {
+  const reviews = await sql<[Reviews[]]>`
+    SELECT
+    id,
+    location_id,
+    review
+
+    FROM
+      reviews
+    WHERE
+      user_id = ${userId}
+  `;
+  return camelcaseKeys(reviews);
 }

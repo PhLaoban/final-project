@@ -1,7 +1,7 @@
 import '../styles/globals.css';
+import '@fortawesome/fontawesome-svg-core/styles.css';
 import { css, Global } from '@emotion/react';
 import { useCallback, useEffect, useState } from 'react';
-import Header from '../components/header';
 import Layout from '../components/layout';
 
 function MyApp({ Component, pageProps }) {
@@ -32,13 +32,19 @@ function MyApp({ Component, pageProps }) {
             padding: 0;
             margin: 0;
             font-family: 'Montserrat', sans-serif;
+            font-family: 'Arvo', serif;
+            font-family: 'Open Sans', sans-serif;
+            font-family: 'Playfair Display', serif;
             /* background-color: white; */
             color: black;
           }
 
           a {
-            color: black;
+            color: black, white;
             text-decoration: none;
+          }
+          p {
+            font-family: 'Montserrat', sans-serif;
           }
 
           * {
@@ -48,6 +54,7 @@ function MyApp({ Component, pageProps }) {
         const
         divStyle={css``}
       />
+
       <Layout user={user}>
         <Component {...pageProps} refreshUserProfile={refreshUserProfile} />
       </Layout>

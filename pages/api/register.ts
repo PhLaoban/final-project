@@ -41,7 +41,7 @@ export default async function handler(
     if (await getUserByUsername(req.body.username)) {
       res
         .status(401)
-        .json({ errors: [{ message: 'Username already taken!' }] });
+        .json({ errors: [{ message: 'Username already Taken!' }] });
       return;
     }
     // hash the password - never store the plain password, encrypt it by hashing it
@@ -51,9 +51,6 @@ export default async function handler(
 
     // TODO: create a session for this user
     const token = crypto.randomBytes(80).toString('base64');
-
-    // 1. create a secret
-    // const csrfSecret = createCSRFSecret();
 
     // 2. update the session create function to receive the secret
 

@@ -11,11 +11,13 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
           <link
-            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Arvo&family=Montserrat:wght@400;700&family=Open+Sans:ital,wght@0,300;1,300&family=Playfair+Display:ital@1&display=swap"
             rel="stylesheet"
           />
+          <link rel="icon" href="/favicon.svg" type="image/x-icon" />
+          <link rel="manifest" href="/site.webmanifest" />
         </Head>
         <body>
           <Main />

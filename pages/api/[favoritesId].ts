@@ -36,8 +36,8 @@ export default async function handler(
         .json({ errors: [{ message: 'Username or password not provided!' }] });
       return;
     }
-    await removeFromFavorites(req.query.favoritesId);
+    await removeFromFavorites(Number(req.query.favoritesId));
 
-    return;
+    return res.status(200);
   }
 }
