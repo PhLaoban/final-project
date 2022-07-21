@@ -15,7 +15,7 @@ export default function UserDetail(props: Props) {
           <meta name="description" content="User not found" />
         </Head>
         <h1>404 - User not found</h1>
-        There is no user with this username.
+        <h1> There is no user with this username.</h1>
       </>
     );
   }

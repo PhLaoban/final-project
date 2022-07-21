@@ -46,6 +46,12 @@ function MyApp({ Component, pageProps }) {
           p {
             font-family: 'Montserrat', sans-serif;
           }
+          h1 {
+            font-family: 'Montserrat', sans-serif;
+          }
+          h3 {
+            font-family: 'Montserrat', sans-serif;
+          }
 
           * {
             box-sizing: border-box;

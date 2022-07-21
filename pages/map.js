@@ -89,9 +89,14 @@ const paginationDivs = css`
     border-radius: 50%;
     max-width: 2.4rem;
     min-height: 2rem;
-    border-color: yellow;
+    border-color: #ffc80a;
     font-size: 20px;
     color: purple;
+
+    &:hover {
+      border-color: #8a71b8;
+      cursor: pointer;
+    }
   }
 
   .streetDescriptions {
@@ -101,11 +106,6 @@ const paginationDivs = css`
     padding: 1rem;
     margin: 1rem;
 
-    &:hover {
-      transform: scale(1.05);
-      transition: 0.4s ease-in-out;
-      opacity: 0.8;
-    }
     height: 50vh;
 
     box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
@@ -126,10 +126,9 @@ const paginationDivs = css`
         border-bottom: 1px solid #333;
         border-color: black;
       }
+
       &:active {
-        &:active {
-          transform: translateX(2px) translateY(-2.5px);
-        }
+        transform: translateX(2px) translateY(-2.5px);
       }
 
       .favIcon {
@@ -158,7 +157,12 @@ const paginationDivs = css`
     p {
       font-family: Open Sans;
       color: grey;
-      font-weight: normal;
+      font-weight: bold;
+
+      font-size: 1.15rem;
+      &:hover {
+        color: #8a71b8;
+      }
     }
   }
 
@@ -215,8 +219,29 @@ const paginationDivs = css`
       background-color: transparent;
       width: 10vw;
       border: none;
+
+      &:hover {
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+        color: #ea4335;
+        border-bottom: 1px solid #333;
+        border-color: black;
+      }
+
+      &:active {
+        transform: translateX(2px) translateY(-2.5px);
+      }
+
       .favIcon {
         color: #d97409;
+        font-size: 20px;
+        &:hover,
+        &:active {
+          cursor: pointer;
+          transition: 0.3s ease-in-out;
+          color: #ea4335;
+          transform: translateX(2px) translateY(-2.5px);
+        }
       }
     }
     .showMoreInfo {
@@ -284,6 +309,9 @@ const modalStyling = css`
 
     min-height: 50vh;
     color: white;
+    h3 {
+      font-style: Montserrat;
+    }
     .reviewArea {
       display: flex;
 
@@ -318,6 +346,10 @@ const buttons = css`
   font-style: inherit;
   font-size: 12pt;
   color: white;
+  cursor: pointer;
+  &:hover {
+    background-color: #8a71b8;
+  }
 `;
 
 const loadingContainer = css`
@@ -327,24 +359,27 @@ const loadingContainer = css`
   justify-content: center;
   align-items: center;
   position: fixed;
-  background: rgba(0, 0, 0, 1);
+  background: white;
   z-index: 1;
-  h1 {
+  font-style: Montserrat;
+
+  p {
     padding-left: 25px;
-    color: white;
-    color: #fff;
+    color: black;
+
+    font-size: 30px;
     text-align: center;
     animation: glow 1s ease-in-out infinite alternate;
 
     @keyframes glow {
       from {
-        text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #c4c1c7,
-          0 0 40px #c4c1c7, 0 0 50px #c4c1c7, 0 0 60px #c4c1c7, 0 0 70px #c4c1c7;
+        text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ffc80a,
+          0 0 40px #ffc80a, 0 0 50px #ffc80a, 0 0 60px #ffc80a, 0 0 70px #ffc80a;
       }
 
       to {
-        text-shadow: 0 0 20px #fff, 0 0 30px #c4c1c7, 0 0 40px #c4c1c7,
-          0 0 50px #c4c1c7, 0 0 60px #c4c1c7, 0 0 70px #c4c1c7, 0 0 80px #c4c1c7;
+        text-shadow: 0 0 20px #fff, 0 0 30px #ffc80a, 0 0 40px #ffc80a,
+          0 0 50px #ffc80a, 0 0 60px #ffc80a, 0 0 70px #ffc80a, 0 0 80px #ffc80a;
       }
     }
   }
@@ -353,7 +388,7 @@ const loadingContainer = css`
     width: 64px;
     height: 64px;
     border: 8px solid;
-    border-color: white transparent white transparent;
+    border-color: black transparent black transparent;
     border-radius: 50%;
     animation: spin-anim 4s linear infinite;
   }
@@ -370,6 +405,9 @@ const loadingContainer = css`
 
 const selectionBar = css`
   font-family: Montserrat;
+  display: flex;
+  justify-content: center;
+  width: 33vw;
   select {
     background-image: linear-gradient(45deg, transparent 50%, white 50%),
       linear-gradient(135deg, white 50%, transparent 50%),
@@ -383,7 +421,7 @@ const selectionBar = css`
     border-radius: 4px;
     display: inline-block;
     font: inherit;
-    line-height: 1.5em;
+    line-height: 1.3em;
     padding: 0.5em 3.5em 0.5em 1em;
 
     /* reset */
@@ -427,7 +465,7 @@ const selectionBar = css`
     border-radius: 4px;
     display: inline-block;
     font: inherit;
-    line-height: 1.5em;
+    line-height: 1.3em;
     padding: 0.5em 3.5em 0.5em 1em;
 
     /* reset */
@@ -439,6 +477,12 @@ const selectionBar = css`
     -webkit-appearance: none;
     -moz-appearance: none;
   }
+`;
+
+const inputField = css`
+  width: 30vw;
+  display: flex;
+  justify-content: center;
 `;
 
 export default function Map(props) {
@@ -558,15 +602,12 @@ export default function Map(props) {
 
   if (!mappingDistricts) {
     return (
-      <>
+      <div>
         <div css={loadingContainer}>
           <div className="spinner" />
-          <h1>Accessible Parking Spot finder loading...</h1>{' '}
+          <p>Accessible Parking Spot finder loading...</p>{' '}
         </div>
-        {/* <div css={headlineLoading}>
-          <h1>Accessible Parking Spot finder loading...</h1>{' '}
-        </div> */}
-      </>
+      </div>
     );
   }
 
@@ -636,15 +677,16 @@ export default function Map(props) {
               </div>
               {checkedButton < 24 ? (
                 <div>
-                  {' '}
-                  &nbsp;
-                  <FontAwesomeIcon icon={faSearchengin} /> &nbsp;
-                  <input
-                    placeholder="Search for Streetname"
-                    onChange={(event) => {
-                      setSearchTerm(event.currentTarget.value);
-                    }}
-                  />
+                  <div css={inputField}>
+                    &nbsp;
+                    <FontAwesomeIcon icon={faSearchengin} /> &nbsp;
+                    <input
+                      placeholder="Search for Streetname"
+                      onChange={(event) => {
+                        setSearchTerm(event.currentTarget.value);
+                      }}
+                    />
+                  </div>
                   <div css={paginationDivs}>
                     {stateDescription
 
@@ -676,9 +718,10 @@ export default function Map(props) {
                               {item.properties.KATEGORIE_TXT}
                             </p>
                             <div className="showMoreInfo">
-                              <div>
-                                <p>Show more information</p>
-                              </div>
+                              <p className="paragraphShowMore">
+                                Show more information or write a Review
+                              </p>
+
                               <div>
                                 <button
                                   onClick={() => {

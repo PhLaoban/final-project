@@ -60,6 +60,11 @@ const registerLoginHeader = css`
     width: 120vw;
     padding: 60px;
   }
+  .registerLogin {
+    &:hover {
+      color: #ffc80a;
+    }
+  }
 `;
 
 const headerstylingMapPage = css`
@@ -147,8 +152,14 @@ export default function Header(props) {
           </div>
         ) : (
           <div css={registerLoginHeader}>
-            <Link href="/register">Register</Link>
-            <Link href="/login">Login</Link>
+            <div className="registerLogin">
+              <Link href="/register">Register</Link>
+            </div>
+            <div className="registerLogin">
+              <Link className="login" href="/login">
+                Login
+              </Link>
+            </div>
           </div>
         )}
 
@@ -182,8 +193,14 @@ export default function Header(props) {
           </div>
         ) : (
           <div css={registerLoginHeader}>
-            <Link href="/register">Register</Link>
-            <Link href="/login">Login</Link>
+            <div className="registerLogin">
+              <Link href="/register">Register</Link>
+            </div>
+            <div className="registerLogin">
+              <Link className="login" href="/login">
+                Login
+              </Link>
+            </div>
           </div>
         )}
 
@@ -207,8 +224,14 @@ export default function Header(props) {
           </div>
         ) : (
           <div css={registerLoginHeader}>
-            <Link href="/register">Register</Link>
-            <Link href="/login">Login</Link>
+            <div className="registerLogin">
+              <Link href="/register">Register</Link>
+            </div>
+            <div className="registerLogin">
+              <Link className="login" href="/login">
+                Login
+              </Link>
+            </div>
           </div>
         )}
 

@@ -170,6 +170,23 @@ const easyparking = css`
   }
 `;
 
+const nextButton = css`
+  background-color: white;
+  border-radius: 50%;
+  max-width: 2.4rem;
+  min-height: 2rem;
+  border-color: #ffc80a;
+  font-size: 20px;
+  color: purple;
+  cursor: pointer;
+  &:hover,
+  &:active {
+    border-color: #8a71b8;
+    transform: scale(1.05);
+    transition: 0.4s ease-in-out;
+  }
+`;
+
 export default function Home() {
   return (
     <div>
@@ -215,6 +232,9 @@ export default function Home() {
           <p className="paragraph">
             You can search by the district or filter by the streetname
           </p>
+          <Link href="/map">
+            <button css={nextButton}>&#129122;</button>
+          </Link>
         </div>
         <div>
           <div className="descriptionHeadline">
@@ -229,6 +249,9 @@ export default function Home() {
             please comment below the parking spots. Or you can simply add some
             to your favorites and they will appear in your profile page.
           </p>
+          <Link href="/map">
+            <button css={nextButton}>&#129122;</button>
+          </Link>
         </div>
         <div>
           <Image src={pen} />

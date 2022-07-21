@@ -1,5 +1,9 @@
 import { css } from '@emotion/react';
-import { faPaperPlane, faWheelchair } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowRightToBracket,
+  faPaperPlane,
+  faWheelchair,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
@@ -99,6 +103,12 @@ const mainstyling = css`
           flex-direction: column;
           justify-content: center;
         }
+        p {
+          text-shadow: 0.5px 0.5px 0.5px #ffba0a;
+          font-family: Open Sans;
+          font-size: 21px;
+          font-weight: 600;
+        }
       }
       #wheelchair {
         text-shadow: 1px 0.5px #ffba0a;
@@ -112,12 +122,6 @@ const mainstyling = css`
         @media (max-width: 700px) {
           font-size: 25pt;
           padding: 7px;
-        }
-        p {
-          text-shadow: 0.5px 0.5px 0.5px #ffba0a;
-          font-family: Open Sans;
-          font-size: 21px;
-          font-weight: 600;
         }
       }
     }
@@ -176,7 +180,7 @@ const mainstyling = css`
           background-color: transparent;
           margin-left: 60px;
           margin-bottom: 60px;
-
+          text-shadow: white;
           p {
             padding-left: 20px;
             color: white;
@@ -204,9 +208,12 @@ const easyparking = css`
   display: flex;
   /* letter-spacing: 1px; */
   /* padding-left: 2rem; */
-
+  width: 80vw;
+  padding-left: 30px;
+  align-items: center;
   @media (max-width: 700px) {
     display: flex;
+    width: 80vw;
   }
   .paragraph {
     width: 60vw;
@@ -231,7 +238,7 @@ const easyparking = css`
     font-size: 30px;
     color: white;
     font-weight: bold;
-    padding-bottom: 5px;
+
     font-family: Montserrat;
 
     @media (max-width: 700px) {
@@ -246,8 +253,34 @@ const easyparking = css`
     margin-top: 15px;
     @media (max-width: 700px) {
       font-size: 25px;
-      padding-right: 30px;
+      padding-right: 45px;
     }
+  }
+`;
+
+const registerFirst = css`
+  display: flex;
+  justify-content: center;
+  padding-right: 80px;
+  gap: 1rem;
+  padding-top: 20px;
+  align-items: center;
+
+  #notRegistered {
+    font-size: 22px;
+    font-weight: bolder;
+  }
+
+  #createAccount {
+    color: #ffe70a;
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  #arrowright {
+    color: #ffe70a;
+    cursor: pointer;
+    padding-top: 6px;
   }
 `;
 
@@ -347,7 +380,6 @@ export default function Register(props: Props) {
                 <div className="buttonWrapper">
                   <button className="button" onClick={() => registerHandler()}>
                     <FontAwesomeIcon id="paperplane" icon={faPaperPlane} />
-                    <p>Submit</p>
                   </button>
                 </div>
                 {errors.map((error) => (
@@ -355,6 +387,13 @@ export default function Register(props: Props) {
                     {error.message}
                   </div>
                 ))}
+              </div>
+              <div css={registerFirst}>
+                <p id="notRegistered">Already registered? </p>
+                <Link href="/register">
+                  <p id="createAccount"> Login</p>
+                </Link>
+                <FontAwesomeIcon id="arrowright" icon={faArrowRightToBracket} />{' '}
               </div>
             </div>
           </div>

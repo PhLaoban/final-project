@@ -1,5 +1,9 @@
 import { css } from '@emotion/react';
-import { faPaperPlane, faWheelchair } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowRightToBracket,
+  faPaperPlane,
+  faWheelchair,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
@@ -241,6 +245,36 @@ const easyparking = css`
   }
 `;
 
+const registerFirst = css`
+  display: flex;
+  justify-content: center;
+  padding-right: 80px;
+  gap: 1rem;
+  padding-top: 20px;
+  align-items: center;
+  #notRegistered {
+    font-size: 22px;
+    font-weight: bolder;
+  }
+
+  #createAccount {
+    color: #ffe70a;
+    font-size: 22px;
+    cursor: pointer;
+    &:hover,
+    &:active {
+      color: white;
+      transform: translateX(2) translateY(2);
+    }
+  }
+
+  #arrowright {
+    color: #ffe70a;
+    cursor: pointer;
+    padding-top: 5px;
+  }
+`;
+
 type Props = {
   refreshUserProfile: () => Promise<void>;
 };
@@ -340,6 +374,13 @@ export default function Register(props: Props) {
                     {error.message}
                   </div>
                 ))}
+              </div>
+              <div css={registerFirst}>
+                <p id="notRegistered">Not registered yet? </p>
+                <Link href="/register">
+                  <p id="createAccount"> Create an account</p>
+                </Link>
+                <FontAwesomeIcon id="arrowright" icon={faArrowRightToBracket} />{' '}
               </div>
             </div>
           </div>
