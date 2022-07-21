@@ -17,13 +17,18 @@ export default async function handler(
   if (req.method === 'POST') {
     console.log('req Body', req.body);
     const token = req.cookies.sessionToken;
+
+    if (!token) {
+      return res.status(400).json({ errors: [{ message: 'Error' }] });
+    }
+
     const user = await getUserByValidSessionToken(token);
     console.log('LOG FROM USER', user);
+
     if (!user) {
-      res.status(401).json({
+      return res.status(401).json({
         errors: [{ message: 'Username or password does not match!' }],
       });
-      return;
     }
 
     const newFavorites = await createFavorite(

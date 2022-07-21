@@ -134,7 +134,7 @@ export async function createSession(token: string, userId: User['id']) {
 }
 
 // Function to get the logged-in user with a valid token
-export async function getUserByValidSessionToken(token: string) {
+export async function getUserByValidSessionToken(token: string | undefined) {
   if (!token) return undefined;
   const [user] = await sql<[User | undefined]>`
   SELECT
