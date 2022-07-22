@@ -364,6 +364,7 @@ export default function Register(props: Props) {
                 <div className="usernamePasswordDiv">
                   Username:
                   <input
+                    data-test-id="username"
                     id="inputfields"
                     value={username}
                     onChange={(event) => {
@@ -374,6 +375,7 @@ export default function Register(props: Props) {
                 <div className="usernamePasswordDiv">
                   Password:{' '}
                   <input
+                    data-test-id="password"
                     id="inputfields"
                     type="password"
                     value={password}
@@ -383,7 +385,11 @@ export default function Register(props: Props) {
                   />
                 </div>
                 <div className="buttonWrapper">
-                  <button className="button" onClick={() => registerHandler()}>
+                  <button
+                    data-test-id="button-register"
+                    className="button"
+                    onClick={() => registerHandler()}
+                  >
                     <FontAwesomeIcon id="paperplane" icon={faPaperPlane} />
                   </button>
                 </div>

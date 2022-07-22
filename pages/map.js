@@ -48,6 +48,10 @@ const mainDiv = css`
   max-width: 40vw;
   min-height: 100vh;
   background-color: white;
+  #headline {
+    font-size: 21px;
+    align-self: center;
+  }
   input {
     border: solid 0.1px;
     border-radius: 2px;
@@ -343,7 +347,7 @@ const modalStyling = css`
       width: 50%;
       #inputfield {
         width: 70%;
-        height: 15vh;
+        height: 15 vh;
       }
     }
     .reviewArea {
@@ -766,8 +770,11 @@ export default function Map(props) {
         <div>
           <div css={mapsSytling}>
             <div css={mainDiv}>
+              <h1 id="headline">Welcome! Please choose a district</h1>
+
               <div css={selectionBar}>
                 <select
+                  data-test-id="selection-bar"
                   placeholder="Districts"
                   onChange={(event) => {
                     setCheckedButton(event.currentTarget.value);
@@ -813,9 +820,8 @@ export default function Map(props) {
                             }
                             key={item.id}
                           >
-                            {/* <div key={item.id} css={descriptionDiv}> */}{' '}
                             <h1>
-                              {item.properties.STRNAM} {item.properties.ONR_VON}{' '}
+                              {item.properties.STRNAM} {item.properties.ONR_VON}
                             </h1>
                             {item.properties.ZEITRAUM === null ? (
                               <p>
@@ -825,7 +831,10 @@ export default function Map(props) {
                                 {item.properties.KATEGORIE_TXT}
                               </p>
                             ) : (
-                              <div className="descriptionStreets">
+                              <div
+                                data-test-id={item.properties.STRNAM}
+                                className="descriptionStreets"
+                              >
                                 <p>
                                   {' '}
                                   <div>
@@ -876,6 +885,7 @@ export default function Map(props) {
                               Show on Map
                             </button>
                             <button
+                              data-test-id="favorites"
                               className="addToFavorite"
                               onClick={() => addToFavorites(item)}
                             >
