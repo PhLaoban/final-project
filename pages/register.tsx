@@ -18,15 +18,17 @@ type Props = {
 
 const errorStyles = css`
   background-color: #c24b4b;
+  font-family: Montserrat;
   font-size: 16px;
   color: white;
   text-align: center;
   text-justify: center;
+  text-justify: center;
   justify-items: center;
-  height: 40px;
+  height: 30px;
   width: 350px;
-  padding: 5px;
-  margin-top: 5px;
+  margin-top: 30px;
+  gap: 2rem;
   animation: errorStyles 0.5s 1;
   animation-fill-mode: forwards;
   animation-delay: 2s;
@@ -63,6 +65,7 @@ const mainstyling = css`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     @media (max-width: 700px) {
       width: 400px;
     }
@@ -209,7 +212,8 @@ const easyparking = css`
   /* letter-spacing: 1px; */
   /* padding-left: 2rem; */
   width: 80vw;
-  padding-left: 30px;
+  padding-left: 20px;
+  height: 15vh;
   align-items: center;
   @media (max-width: 700px) {
     display: flex;
@@ -311,6 +315,7 @@ export default function Register(props: Props) {
 
     if ('errors' in registerResponeBody) {
       setErrors(registerResponeBody.errors);
+      return;
     }
     const returnTo = router.query.returnTo;
 
@@ -382,21 +387,21 @@ export default function Register(props: Props) {
                     <FontAwesomeIcon id="paperplane" icon={faPaperPlane} />
                   </button>
                 </div>
-                {errors.map((error) => (
-                  <div css={errorStyles} key={`error-${error.message}`}>
-                    {error.message}
-                  </div>
-                ))}
               </div>
               <div css={registerFirst}>
                 <p id="notRegistered">Already registered? </p>
-                <Link href="/register">
+                <Link href="/login">
                   <p id="createAccount"> Login</p>
                 </Link>
                 <FontAwesomeIcon id="arrowright" icon={faArrowRightToBracket} />{' '}
               </div>
             </div>
           </div>
+          {errors.map((error) => (
+            <div css={errorStyles} key={`error-${error.message}`}>
+              {error.message}
+            </div>
+          ))}
         </div>
       </main>
     </div>

@@ -48,6 +48,7 @@ function MyApp({ Component, pageProps }) {
           }
           h1 {
             font-family: 'Montserrat', sans-serif;
+            font-family: Arvo;
           }
           h3 {
             font-family: 'Montserrat', sans-serif;

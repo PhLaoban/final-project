@@ -42,7 +42,7 @@ const headerStylingPurple = css`
     }
   }
   .headerdescription {
-    padding: 1.7rem;
+    padding: 1.5rem;
     color: white;
     &:hover {
       color: #ffc80a;
@@ -72,8 +72,10 @@ const headerstylingMapPage = css`
   flex-direction: row-reverse;
   font-size: 18px;
   font-weight: lighter;
-
+  padding-right: 10px;
+  padding-left: 10px;
   color: white;
+  gap: 2rem;
 
   align-items: center;
   font-family: Montserrat;
@@ -86,7 +88,7 @@ const headerstylingMapPage = css`
 
   .parking {
     display: flex;
-    width: 68vw;
+    width: 63vw;
 
     #park {
       font-size: 30px;
@@ -100,7 +102,10 @@ const headerstylingMapPage = css`
       color: #ffc80a;
       font-size: 30px;
       font-weight: bold;
+      text-justify: start;
+
       font-style: italic;
+
       margin-top: 25px;
     }
   }
@@ -142,7 +147,7 @@ export default function Header(props) {
 
         {props.user && (
           <div className="headerdescription">
-            <Link href="/map">Search for parking lots</Link>
+            <Link href="/map">Search for parking spots</Link>
           </div>
         )}
         {props.user ? (
@@ -192,7 +197,7 @@ export default function Header(props) {
             <Anchor href="/logout">Logout</Anchor>{' '}
           </div>
         ) : (
-          <div css={registerLoginHeader}>
+          <div css={registerLoginHeader} style={{ color: 'black' }}>
             <div className="registerLogin">
               <Link href="/register">Register</Link>
             </div>
@@ -204,7 +209,7 @@ export default function Header(props) {
           </div>
         )}
 
-        <div className="parking">
+        <div className="parking" style={{ paddingLeft: '50px' }}>
           <p id="park"> Easy Park</p> <p id="ing">ing </p>
         </div>
       </header>
@@ -234,7 +239,6 @@ export default function Header(props) {
             </div>
           </div>
         )}
-
         <div className="parking">
           <p id="park"> Easy Park</p> <p id="ing">ing </p>
         </div>

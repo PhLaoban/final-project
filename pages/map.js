@@ -2,9 +2,14 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 import '@reach/combobox/styles.css';
 import { css } from '@emotion/react';
 import { faSearchengin } from '@fortawesome/free-brands-svg-icons';
-import { faHeartCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faHeartCirclePlus,
+  faWheelchairMove,
+  faXmarkCircle,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GoogleMap, MarkerF, useLoadScript } from '@react-google-maps/api';
+import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   getDistricts,
@@ -106,13 +111,16 @@ const paginationDivs = css`
     padding: 1rem;
     margin: 1rem;
 
-    height: 50vh;
+    height: 62vh;
 
     box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
       0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
       0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
       0 100px 80px rgba(0, 0, 0, 0.12);
-
+    .descriptionStreets {
+      display: flex;
+      flex-direction: column;
+    }
     .addToFavorite {
       min-height: 6vh;
       background-color: transparent;
@@ -157,7 +165,7 @@ const paginationDivs = css`
     p {
       font-family: Open Sans;
       color: grey;
-      font-weight: bold;
+      font-weight: 100;
 
       font-size: 1.15rem;
       &:hover {
@@ -173,7 +181,7 @@ const paginationDivs = css`
     padding: 1rem;
     margin: 1rem;
     background-color: #ced9e1;
-    height: 50vh;
+    height: 60vh;
 
     position: relative;
     &::before,
@@ -266,6 +274,24 @@ const showMOreLessButtons = css`
   display: flex;
   justify-content: center;
   height: 2rem;
+  border: none;
+  gap: 1rem;
+
+  button {
+    border-radius: 28px;
+    border: none;
+    max-width: 200px;
+    min-height: 6vh;
+    background-color: #ffc80a;
+    font-family: Open Sans;
+    font-style: inherit;
+    font-size: 12pt;
+    color: white;
+    cursor: pointer;
+    &:hover {
+      background-color: #8a71b8;
+    }
+  }
 `;
 
 const modalStyling = css`
@@ -310,7 +336,15 @@ const modalStyling = css`
     min-height: 50vh;
     color: white;
     h3 {
-      font-style: Montserrat;
+      font-style: Open sans;
+    }
+
+    .textarea {
+      width: 50%;
+      #inputfield {
+        width: 70%;
+        height: 15vh;
+      }
     }
     .reviewArea {
       display: flex;
@@ -318,18 +352,27 @@ const modalStyling = css`
       flex-direction: row;
     }
     .reviewResults {
-      width: 700px;
-      display: flex;
-      padding: 20px;
-      justify-content: flex-end;
+      width: 50%;
+      font-family: Open Sans;
+
       h2 {
-        padding-right: 30px;
+        font-family: Montserrat;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        flex-direction: column;
       }
     }
   }
 
   .close-modal {
     position: absolute;
+    border: none;
+    color: white;
+    font-size: 25px;
+    cursor: pointer;
+    background-color: transparent;
     top: 10px;
     right: 10px;
     padding: 5px 7px;
@@ -340,7 +383,7 @@ const buttons = css`
   border-radius: 28px;
   border: none;
   max-width: 200px;
-  min-height: 6vh;
+  min-height: 5vh;
   background-color: #ffc80a;
   font-family: Open Sans;
   font-style: inherit;
@@ -485,6 +528,66 @@ const inputField = css`
   justify-content: center;
 `;
 
+const notloggedIn = css`
+  width: 100vw;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  gap: 3rem;
+
+  .wheelchair {
+    font-size: 70px;
+    color: #8a71b8;
+  }
+  .container {
+    width: 70vw;
+    height: 50vh;
+    background-color: #8a71b8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    h1 {
+      font-family: Arvo;
+      font-weight: 100;
+    }
+    box-shadow: black 0px 0px 0px 2px inset,
+      rgb(255, 255, 255) 10px -10px 0px -3px, rgb(255, 217, 19) 10px -10px,
+      rgb(255, 255, 255) 20px -20px 0px -3px, rgb(110, 107, 106) 20px -20px;
+    .contentContainer {
+      height: 40vh;
+      width: 60vw;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+`;
+
+const buttonLoginFirst = css`
+  /* height: 100px; */
+  border-radius: 28px;
+  border: none;
+  max-width: 200px;
+  min-height: 6vh;
+  background-color: #ffc80a;
+  font-family: Open Sans;
+  font-style: inherit;
+  font-size: 12pt;
+  font-weight: 600;
+  color: white;
+
+  cursor: pointer;
+
+  &:hover {
+    color: black;
+  }
+`;
+
 export default function Map(props) {
   const [parking, setParking] = useState();
 
@@ -500,7 +603,10 @@ export default function Map(props) {
   const [sendIdToReview, setSendIdToReview] = useState({});
   const [currentReview, setCurrentReview] = useState();
   const [filteredReviewsState, setFilteredReviewsState] = useState();
-  const [streetName, setStreetName] = useState();
+  const [streetName, setStreetName] = useState({});
+  const [streetNameNumber, setStreetNameNumber] = useState();
+
+  console.log('streetnameNumber', streetName);
 
   console.log('review', review);
   console.log('sendIdtoReview', sendIdToReview);
@@ -711,12 +817,33 @@ export default function Map(props) {
                             <h1>
                               {item.properties.STRNAM} {item.properties.ONR_VON}{' '}
                             </h1>
-                            <p>
-                              {' '}
-                              {item.properties.BESCHREIBUNG}
-                              {item.properties.ZEITRAUM}
-                              {item.properties.KATEGORIE_TXT}
-                            </p>
+                            {item.properties.ZEITRAUM === null ? (
+                              <p>
+                                {' '}
+                                {item.properties.BESCHREIBUNG}
+                                <u> Private or Public:</u> &nbsp;
+                                {item.properties.KATEGORIE_TXT}
+                              </p>
+                            ) : (
+                              <div className="descriptionStreets">
+                                <p>
+                                  {' '}
+                                  <div>
+                                    <u> Description:</u>
+                                    {item.properties.BESCHREIBUNG}
+                                  </div>
+                                  <div>
+                                    <u>Time-Range:</u>
+                                    {item.properties.ZEITRAUM}
+                                  </div>
+                                  <div>
+                                    {' '}
+                                    <u> Private or Public:</u> &nbsp;
+                                    {item.properties.KATEGORIE_TXT}
+                                  </div>
+                                </p>
+                              </div>
+                            )}
                             <div className="showMoreInfo">
                               <p className="paragraphShowMore">
                                 Show more information or write a Review
@@ -728,6 +855,9 @@ export default function Map(props) {
                                     toggleModal();
                                     setSendIdToReview(item.id);
                                     setStreetName(item.properties.STRNAM);
+                                    setStreetNameNumber(
+                                      item.properties.ONR_VON,
+                                    );
                                   }}
                                   className="buttonArrow"
                                 >
@@ -797,21 +927,25 @@ export default function Map(props) {
               </GoogleMap>
             </div>
           </div>
-          {/* <div css={loadingScreen}>{loading ? 'Loading...' : ''}</div> */}
 
           <div css={modalStyling}>
             {modal && (
               <div className="modal">
                 <button onClick={toggleModal} className="overlay" />
                 <div className="modal-content">
-                  <h1> {streetName}</h1>
-                  <h3>
-                    Hello write a Review about this Parking Spot or look at
+                  <h1>
+                    {' '}
+                    {streetName} &nbsp;
+                    {streetNameNumber}
+                  </h1>
+                  <p>
+                    Please write a Review about this Parking Spot or look at
                     other people's reviews
-                  </h3>
+                  </p>
                   <div className="reviewArea">
-                    <div>
+                    <div className="textarea">
                       <textarea
+                        id="inputfield"
                         onChange={(event) =>
                           setCurrentReview(event.currentTarget.value)
                         }
@@ -835,8 +969,9 @@ export default function Map(props) {
                           return (
                             <div key={item.id}>
                               {' '}
-                              <br />
-                              {item.review}
+                              <ul>
+                                <li>{item.review}</li>
+                              </ul>
                             </div>
                           );
                         })}
@@ -846,7 +981,7 @@ export default function Map(props) {
                   </div>
 
                   <button className="close-modal" onClick={toggleModal}>
-                    CLOSE
+                    <FontAwesomeIcon icon={faXmarkCircle} />
                   </button>
                 </div>
               </div>
@@ -854,57 +989,28 @@ export default function Map(props) {
           </div>
         </div>
       ) : (
-        <div>
-          <h1>
-            Hey, you are currently not logged in. If you want to use all of the
-            features, please log in first.
-          </h1>
+        <div css={notloggedIn}>
+          <FontAwesomeIcon className="wheelchair" icon={faWheelchairMove} />
 
-          <button>Proceed to login</button>
+          <div className="container">
+            {' '}
+            <div className="contentContainer">
+              <h1>
+                Hey, you are currently not logged in. If you want to use all of
+                the features, please log in first.
+              </h1>
+            </div>
+            <div className="buttonContainer">
+              <Link href="/login">
+                <button css={buttonLoginFirst}>Proceed to login</button>
+              </Link>
+            </div>
+          </div>
         </div>
       )}
     </div>
   );
 }
-
-// const PlacesAutocomplete = ({ setSelected }) => {
-//   const {
-//     ready,
-//     value,
-//     setValue,
-//     suggestions: { status, data },
-//     clearSuggestions,
-//   } = usePlacesAutocomplete();
-
-//   const handleSelect = async (address) => {
-//     setValue(address, false);
-//     clearSuggestions();
-
-//     const results = await getGeocode({ address });
-//     const { lat, lng } = await getLatLng(results[0]);
-//     setSelected({ lat, lng });
-//   };
-
-//   return (
-//     <Combobox onSelect={handleSelect}>
-//       <ComboboxInput
-//         value={value}
-//         onChange={(e) => setValue(e.target.value)}
-//         disabled={!ready}
-//         className="combobox-input"
-//         placeholder="Search an address"
-//       />
-//       <ComboboxPopover>
-//         <ComboboxList>
-//           {status === 'OK' &&
-//             data.map(({ place_id, description }) => (
-//               <ComboboxOption key={place_id} value={description} />
-//             ))}
-//         </ComboboxList>
-//       </ComboboxPopover>
-//     </Combobox>
-//   );
-// };
 
 export async function getServerSideProps(context) {
   const districts = await getDistricts();

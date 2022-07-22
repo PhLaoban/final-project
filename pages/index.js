@@ -4,16 +4,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ipadpro1 from '../public/ipadpro1.png';
 import pen from '../public/pen.png';
-import radiobox from '../public/radiobox.png';
+import radiobox1 from '../public/radiobox1.png';
 
 const mainDiv = css`
   background-color: #8a71b8;
   color: white;
   width: 100vw;
   padding: 0 10em;
-  /* width: min(100%, 100vw); */
+  margin-bottom: 0;
 
-  min-height: 80vh;
   h1 {
     font-family: Montserrat;
   }
@@ -212,7 +211,7 @@ export default function Home() {
           </div>
         </div>
         <div className="imageDiv">
-          <Image src={radiobox} />
+          <Image src={radiobox1} />
         </div>
       </div>
       <div css={easyparking}>
