@@ -15,15 +15,22 @@ const headerStylingPurple = css`
   font-family: Montserrat;
   @media (max-width: 700px) {
     display: flex;
+    background-color: #8a71b8;
     width: 800px;
     height: 20vh;
+    gap: 1.8rem;
     font-size: 20px;
   }
 
   .parking {
     display: flex;
     width: 68vw;
+    background-color: #8a71b8;
+
     padding-left: 20px;
+    /* @media (max-width: 950px) {
+      width: width 60vw;
+    } */
 
     #park {
       font-size: 30px;
@@ -31,6 +38,9 @@ const headerStylingPurple = css`
       font-weight: bold;
       padding-bottom: 5px;
       letter-spacing: 1px;
+      @media (max-width: 950px) {
+        font-size: 30px;
+      }
     }
     #ing {
       font-family: Playfair Display;
@@ -38,7 +48,11 @@ const headerStylingPurple = css`
       font-size: 30px;
       font-weight: bold;
       font-style: italic;
-      margin-top: 25px;
+      margin-top: 27px;
+      @media (max-width: 950px) {
+        font-size: 30px;
+        margin-top: 28px;
+      }
     }
   }
   .headerdescription {
@@ -72,7 +86,7 @@ const headerstylingMapPage = css`
   flex-direction: row-reverse;
   font-size: 18px;
   font-weight: lighter;
-  padding-right: 10px;
+  padding-right: 7px;
   padding-left: 10px;
   color: white;
   gap: 2rem;
@@ -81,36 +95,50 @@ const headerstylingMapPage = css`
   font-family: Montserrat;
   @media (max-width: 700px) {
     display: flex;
-    width: 800px;
-
-    font-size: 20px;
+    width: 700px;
+    align-items: center;
+    font-size: 12px;
   }
 
   .parking {
     display: flex;
-    width: 63vw;
+    width: 70vw;
 
     #park {
-      font-size: 30px;
       color: black;
       font-weight: bold;
-
+      font-size: 28px;
       letter-spacing: 1px;
+      @media (max-width: 950px) {
+        font-size: 22px;
+        align-self: center;
+      }
     }
     #ing {
       font-family: Playfair Display;
       color: #ffc80a;
-      font-size: 30px;
+      font-size: 28px;
       font-weight: bold;
       text-justify: start;
 
       font-style: italic;
 
       margin-top: 25px;
+      @media (max-width: 950px) {
+        font-size: 22px;
+        align-self: center;
+        margin-bottom: 27px;
+        font-weight: 1000;
+      }
     }
   }
   .goBack {
     color: black;
+    width: 16vw;
+    @media (max-width: 950px) {
+      width: 50vw;
+      font-size: 12px;
+    }
     &:hover {
       transition: 0.3s;
       color: #f29900;
@@ -119,6 +147,86 @@ const headerstylingMapPage = css`
   .headerdescription {
     padding: 2rem;
     color: black;
+    @media (max-width: 700px) {
+      width: 30vw;
+    }
+    &:hover {
+      cursor: pointer;
+      transition: 0.3s;
+      color: #f29900;
+    }
+  }
+`;
+
+const headerstylingProfilePage = css`
+  display: flex;
+  flex-direction: row-reverse;
+  font-size: 18px;
+  font-weight: lighter;
+  padding-right: 7px;
+  padding-left: 10px;
+  color: white;
+  gap: 2rem;
+  width: 100vw;
+  align-items: center;
+  font-family: Montserrat;
+  @media (max-width: 700px) {
+    display: flex;
+    width: 600px;
+    align-items: center;
+    font-size: 12px;
+  }
+
+  .parking {
+    display: flex;
+    width: 70vw;
+
+    #park {
+      color: black;
+      font-weight: bold;
+      font-size: 28px;
+      letter-spacing: 1px;
+      @media (max-width: 950px) {
+        font-size: 22px;
+        align-self: center;
+      }
+    }
+    #ing {
+      font-family: Playfair Display;
+      color: #ffc80a;
+      font-size: 28px;
+      font-weight: bold;
+      text-justify: start;
+
+      font-style: italic;
+
+      margin-top: 25px;
+      @media (max-width: 950px) {
+        font-size: 22px;
+        align-self: center;
+        margin-bottom: 27px;
+        font-weight: 1000;
+      }
+    }
+  }
+  .goBack {
+    color: black;
+    width: 16vw;
+    @media (max-width: 950px) {
+      width: 50vw;
+      font-size: 12px;
+    }
+    &:hover {
+      transition: 0.3s;
+      color: #f29900;
+    }
+  }
+  .headerdescriptionLogutRegister {
+    padding: 2rem;
+    color: black;
+    @media (max-width: 700px) {
+      width: 30vw;
+    }
     &:hover {
       cursor: pointer;
       transition: 0.3s;
@@ -216,7 +324,7 @@ export default function Header(props) {
     );
   } else if (path === '/users/private-profile') {
     return (
-      <header css={headerstylingMapPage}>
+      <header css={headerstylingProfilePage}>
         {props.user && (
           <div className="goBack">
             <Link href="/">Go back to Homepage</Link>
@@ -224,7 +332,7 @@ export default function Header(props) {
         )}
         {props.user ? (
           // using <a> instead of <Link> since we want to force a full refresh
-          <div className="headerdescription">
+          <div className="headerdescriptionLogutRegister">
             <Anchor href="/logout">Logout</Anchor>
           </div>
         ) : (

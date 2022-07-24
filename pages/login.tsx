@@ -153,7 +153,9 @@ const mainstyling = css`
         border: none;
         background-color: #ffc80a;
         align-items: center;
+        justify-content: center;
         display: flex;
+        padding-right: 12px;
         p {
           color: transparent;
         }

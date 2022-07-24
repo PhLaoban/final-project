@@ -3,12 +3,14 @@ import '@reach/combobox/styles.css';
 import { css } from '@emotion/react';
 import { faSearchengin } from '@fortawesome/free-brands-svg-icons';
 import {
+  faArrowRight,
   faHeartCirclePlus,
   faWheelchairMove,
   faXmarkCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GoogleMap, MarkerF, useLoadScript } from '@react-google-maps/api';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -20,8 +22,8 @@ import {
 // import { PlacesAutocomplete } from './places.js';
 
 const mapContainerStyle = {
-  maxWidth: '80vw',
-  minHeight: '80vh',
+  maxWidth: '100%',
+  minHeight: '70vh',
   backgroundColor: '#cad5dc',
 };
 
@@ -29,11 +31,24 @@ const mapsSytling = css`
   height: 50vh;
   display: flex;
   flex-direction: row;
-  max-width: 100vw;
-  min-height: 80vh;
+  max-width: 200vw;
+  min-height: 70vh;
+  gap: 2rem;
+  background-color: white;
+  @media (max-width: 950px) {
+    width: 180vw;
+    /* height: 100px; */
+    /* padding-left: 30px; */
+    margin-left: 30px;
+    height: 60vh;
+    gap: 2rem;
+  }
 
   .google {
     flex: 1;
+    @media (max-width: 950px) {
+      flex: 1;
+    }
     box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
       0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
       0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
@@ -45,13 +60,27 @@ const mainDiv = css`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 40vw;
+  max-width: 25vw;
   min-height: 100vh;
   background-color: white;
-  #headline {
-    font-size: 21px;
-    align-self: center;
+
+  @media (max-width: 950px) {
+    max-width: 70vw;
+    height: 50vh;
   }
+  #headline {
+    font-size: 20px;
+    align-self: center;
+    @media (max-width: 950px) {
+      font-size: 17px;
+    }
+  }
+  p {
+    padding-left: 10px;
+    @media (max-width: 950px) {
+    }
+  }
+
   input {
     border: solid 0.1px;
     border-radius: 2px;
@@ -68,15 +97,20 @@ const options = {
 };
 
 const paginationDivs = css`
-  max-width: 100vw;
+  /* max-width: 30vw; */
   padding: 1rem;
   background-color: white;
   justify-content: space-between;
   display: grid;
   grid-template-rows: 100%;
   height: 70vh;
+  width: 27vw;
   overflow-y: scroll;
   scrollbar-color: transparent;
+  @media (max-width: 950px) {
+    width: 75vw;
+    /* display: none; */
+  }
   /* scrollbar-width: none; */
   ::-webkit-scrollbar {
     width: 12px;
@@ -93,20 +127,6 @@ const paginationDivs = css`
   }
 
   padding-right: 20px;
-  .buttonArrow {
-    background-color: white;
-    border-radius: 50%;
-    max-width: 2.4rem;
-    min-height: 2rem;
-    border-color: #ffc80a;
-    font-size: 20px;
-    color: purple;
-
-    &:hover {
-      border-color: #8a71b8;
-      cursor: pointer;
-    }
-  }
 
   .streetDescriptions {
     display: flex;
@@ -114,13 +134,45 @@ const paginationDivs = css`
     justify-content: space-between;
     padding: 1rem;
     margin: 1rem;
-
-    height: 62vh;
+    width: 22vw;
+    height: 57vh;
 
     box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
       0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
       0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
       0 100px 80px rgba(0, 0, 0, 0.12);
+
+    @media (max-width: 950px) {
+      width: 83%;
+    }
+    .streetHeadline {
+      font-family: arvo;
+      font-size: 1.6rem;
+      @media (max-width: 950px) {
+        font-size: 1rem;
+      }
+    }
+
+    .buttonArrow {
+      background-color: white;
+      border-radius: 50%;
+      max-width: 2.4rem;
+      min-height: 2rem;
+      font-size: 20px;
+      color: purple;
+      @media (max-width: 950px) {
+        display: flex;
+        width: 2rem;
+        justify-content: center;
+        align-items: center;
+      }
+
+      &:hover {
+        border-color: #8a71b8;
+        cursor: pointer;
+      }
+    }
+
     .descriptionStreets {
       display: flex;
       flex-direction: column;
@@ -130,12 +182,15 @@ const paginationDivs = css`
       background-color: transparent;
       width: 10vw;
       border: none;
-      font-size: 15px;
+      @media screen {
+        width: 60vw;
+        display: flex;
+      }
       &:hover {
         cursor: pointer;
         transition: 0.3s ease-in-out;
         color: #ea4335;
-        border-bottom: 1px solid #333;
+
         border-color: black;
       }
 
@@ -162,16 +217,17 @@ const paginationDivs = css`
       grid-template-columns: 50% 50%;
       align-items: center;
     }
-    h1 {
-      font-family: arvo;
-      font-size: 28px;
-    }
+    /*  */
     p {
       font-family: Open Sans;
-      color: grey;
-      font-weight: 100;
+      color: black;
+      font-weight: 600;
 
-      font-size: 1.15rem;
+      font-size: 1rem;
+
+      @media (max-width: 950px) {
+        font-size: 1rem;
+      }
       &:hover {
         color: #8a71b8;
       }
@@ -185,36 +241,40 @@ const paginationDivs = css`
     padding: 1rem;
     margin: 1rem;
     background-color: #ced9e1;
-    height: 60vh;
+    width: 22vw;
+    height: 57vh;
 
     position: relative;
-    &::before,
-    &::after {
-      content: '';
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      z-index: -1;
-      border: 2px solid #ffba0a;
-      transition: all 0.25s ease-out;
+    @media (max-width: 950px) {
+      width: 83%;
     }
-    &::before {
+
+    .buttonArrow {
       background-color: #ced9e1;
-      top: -10px;
-      left: -10px;
-    }
-    &::after {
-      bottom: -10px;
-      right: -10px;
-    }
-    &:hover {
-      &::before {
-        top: 10px;
-        left: 10px;
+
+      min-height: 1.8rem;
+
+      font-size: 18px;
+      color: purple;
+      border: none;
+      @media (max-width: 950px) {
+        display: flex;
+        width: 2rem;
+        justify-content: center;
+        align-items: center;
       }
-      &::after {
-        bottom: 10px;
-        right: 10px;
+
+      &:hover {
+        border-color: #8a71b8;
+        cursor: pointer;
+      }
+    }
+
+    .streetHeadline {
+      font-family: arvo;
+      font-size: 1.6rem;
+      @media (max-width: 950px) {
+        font-size: 1rem;
       }
     }
 
@@ -231,12 +291,15 @@ const paginationDivs = css`
       background-color: transparent;
       width: 10vw;
       border: none;
+      @media screen {
+        width: 60vw;
+        display: flex;
+      }
 
       &:hover {
         cursor: pointer;
         transition: 0.3s ease-in-out;
         color: #ea4335;
-        border-bottom: 1px solid #333;
         border-color: black;
       }
 
@@ -266,11 +329,15 @@ const paginationDivs = css`
       font-family: arvo;
       font-size: 28px;
     }
-    p {
+    /* p {
       font-family: Open Sans;
       color: black;
-      font-weight: normal;
-    }
+      font-weight: 600;
+
+      @media (max-width: 950px) {
+        font-size: 1rem;
+      }
+    } */
   }
 `;
 
@@ -286,8 +353,8 @@ const showMOreLessButtons = css`
     border: none;
     max-width: 200px;
     min-height: 6vh;
-    background-color: #ffc80a;
-    font-family: Open Sans;
+    background-color: #8a71b8;
+    font-family: Arvo;
     font-style: inherit;
     font-size: 12pt;
     color: white;
@@ -319,6 +386,10 @@ const modalStyling = css`
     right: 0;
     bottom: 0;
     position: fixed;
+    @media (max-width: 950px) {
+      width: 100%;
+      height: 100%;
+    }
   }
 
   .overlay {
@@ -335,19 +406,33 @@ const modalStyling = css`
     background-image: url('/wheelchair.png');
     padding: 14px 28px;
     border-radius: 3px;
-    max-width: 50vw;
+    width: 50vw;
 
     min-height: 50vh;
     color: white;
+    @media (max-width: 950px) {
+      width: 110vw;
+      min-height: 50vh;
+
+      top: 40%;
+      left: 50%;
+      background-image: url('/wheelchair.png');
+      background-size: cover;
+      transform: translate(-50%, -50%);
+    }
     h3 {
       font-style: Open sans;
     }
 
     .textarea {
-      width: 50%;
+      width: 70%;
       #inputfield {
-        width: 70%;
-        height: 15 vh;
+        width: 77%;
+        height: 15vh;
+        @media (max-width: 950px) {
+          font-size: 17px;
+          width: 95%;
+        }
       }
     }
     .reviewArea {
@@ -358,14 +443,10 @@ const modalStyling = css`
     .reviewResults {
       width: 50%;
       font-family: Open Sans;
-
+      @media (max-width: 950px) {
+      }
       h2 {
         font-family: Montserrat;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-        flex-direction: column;
       }
     }
   }
@@ -388,14 +469,22 @@ const buttons = css`
   border: none;
   max-width: 200px;
   min-height: 5vh;
-  background-color: #ffc80a;
+  background-color: #8a71b8;
   font-family: Open Sans;
   font-style: inherit;
-  font-size: 12pt;
+  font-size: 11pt;
   color: white;
   cursor: pointer;
+  font-family: arvo;
+
+  @media (max-width: 950px) {
+    font-size: 10pt;
+    font-weight: bold;
+    font-family: arvo;
+    width: 44vw;
+  }
   &:hover {
-    background-color: #8a71b8;
+    background-color: #ffc80a;
   }
 `;
 
@@ -454,13 +543,27 @@ const selectionBar = css`
   font-family: Montserrat;
   display: flex;
   justify-content: center;
-  width: 33vw;
+  width: 28vw;
+  padding-left: 10px;
+  padding-right: 20px;
+
+  /* gap: 1rem;
+  padding-left: 20px; */
+  @media (max-width: 950px) {
+    width: 280px;
+    /* padding-right: 170px; */
+    font-size: 10px;
+  }
   select {
-    background-image: linear-gradient(45deg, transparent 50%, white 50%),
+    background-image: linear-gradient(45deg, transparent 50%, white 20%),
       linear-gradient(135deg, white 50%, transparent 50%),
       linear-gradient(to right, #8a71b8, #8a71b8);
     background-position: calc(100% - 20px) calc(1em + 2px),
       calc(100% - 15px) calc(1em + 2px), 100% 0;
+
+    @media (max-width: 950px) {
+      background-size: 5px 5px, 5px 5px, 3.6em 2.5em;
+    }
     background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
     background-repeat: no-repeat;
     background-color: white;
@@ -468,11 +571,8 @@ const selectionBar = css`
     border-radius: 4px;
     display: inline-block;
     font: inherit;
-    line-height: 1.3em;
+    line-height: 1.4em;
     padding: 0.5em 3.5em 0.5em 1em;
-
-    /* reset */
-
     margin: 0;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -503,6 +603,10 @@ const selectionBar = css`
       linear-gradient(135deg, transparent 50%, #ffba0a 50%),
       linear-gradient(to right, grey, grey);
     background-position: calc(100% - 15px) 1em, calc(100% - 20px) 1em, 100% 0;
+
+    @media (max-width: 950px) {
+      background-size: 5px 5px, 5px 5px, 3.6em 2.5em;
+    }
     background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
     background-repeat: no-repeat;
     border-color: grey;
@@ -512,7 +616,7 @@ const selectionBar = css`
     border-radius: 4px;
     display: inline-block;
     font: inherit;
-    line-height: 1.3em;
+    line-height: 1.4em;
     padding: 0.5em 3.5em 0.5em 1em;
 
     /* reset */
@@ -526,10 +630,15 @@ const selectionBar = css`
   }
 `;
 
-const inputField = css`
+const searchInputfield = css`
   width: 30vw;
   display: flex;
   justify-content: center;
+  padding: 0;
+  /* margin: 0; */
+  @media (max-width: 950px) {
+    width: 47vw;
+  }
 `;
 
 const notloggedIn = css`
@@ -573,10 +682,10 @@ const notloggedIn = css`
 `;
 
 const buttonLoginFirst = css`
-  /* height: 100px; */
   border-radius: 28px;
   border: none;
-  max-width: 200px;
+  width: 8vw;
+  margin: 1rem;
   min-height: 6vh;
   background-color: #ffc80a;
   font-family: Open Sans;
@@ -589,6 +698,35 @@ const buttonLoginFirst = css`
 
   &:hover {
     color: black;
+  }
+
+  @media screen and (max-width: 950px) {
+    width: 24vw;
+  }
+`;
+
+const postreviewButton = css`
+  /* height: 100px; */
+  border-radius: 28px;
+  border: none;
+  max-width: 200px;
+  min-height: 5vh;
+  background-color: #ffc80a;
+  font-family: Open Sans;
+  font-style: inherit;
+  font-size: 11pt;
+  color: white;
+  cursor: pointer;
+  font-family: arvo;
+
+  @media (max-width: 950px) {
+    font-size: 10pt;
+    font-weight: bold;
+    font-family: arvo;
+    width: 44vw;
+  }
+  &:hover {
+    background-color: #8a71b8;
   }
 `;
 
@@ -768,9 +906,21 @@ export default function Map(props) {
     <div>
       {props.user ? (
         <div>
+          <Head>
+            <title>Parking Spot Search</title>
+            <meta
+              name="Parking"
+              content="Search for a parking spot with google maps"
+            />
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
           <div css={mapsSytling}>
             <div css={mainDiv}>
-              <h1 id="headline">Welcome! Please choose a district</h1>
+              <h1 id="headline">Welcome!</h1>
+              <p className="welcomeParagraph">
+                Please choose a district and click <u>show on Map</u> to see
+                your Parking Spot on the Map
+              </p>
 
               <div css={selectionBar}>
                 <select
@@ -790,7 +940,7 @@ export default function Map(props) {
               </div>
               {checkedButton < 24 ? (
                 <div>
-                  <div css={inputField}>
+                  <div css={searchInputfield}>
                     &nbsp;
                     <FontAwesomeIcon icon={faSearchengin} /> &nbsp;
                     <input
@@ -810,6 +960,7 @@ export default function Map(props) {
                       })
                       .slice(0, visible)
                       .map((item) => {
+                        // Ternary operator to show all the functions, with inputfield to search streetnames, and to choose streets, if on of the districts is clicked.
                         return checkedButton < 24 ? (
                           <div
                             className={
@@ -820,17 +971,43 @@ export default function Map(props) {
                             }
                             key={item.id}
                           >
-                            <h1>
+                            <div className="streetHeadline">
                               {item.properties.STRNAM} {item.properties.ONR_VON}
-                            </h1>
-                            {item.properties.ZEITRAUM === null ? (
+                            </div>
+                            {item.properties.BESCHREIBUNG === null &&
+                            item.properties.ZEITRAUM ? (
                               <p>
                                 {' '}
-                                {item.properties.BESCHREIBUNG}
-                                <u> Private or Public:</u> &nbsp;
-                                {item.properties.KATEGORIE_TXT}
+                                <div>
+                                  <u>Time-Range:</u> &nbsp;
+                                  {item.properties.ZEITRAUM}
+                                </div>
+                                <div>
+                                  {' '}
+                                  <u> Private or Public:</u> &nbsp;
+                                  {item.properties.KATEGORIE_TXT}
+                                </div>
                               </p>
-                            ) : (
+                            ) : item.properties.ZEITRAUM === null &&
+                              item.properties.BESCHREIBUNG ? (
+                              <div
+                                data-test-id={item.properties.STRNAM}
+                                className="descriptionStreets"
+                              >
+                                <p>
+                                  <div>
+                                    <u> Description:</u>&nbsp;&nbsp;
+                                    {item.properties.BESCHREIBUNG}
+                                  </div>
+                                  <div>
+                                    {' '}
+                                    <u> Private or Public:</u> &nbsp;
+                                    {item.properties.KATEGORIE_TXT}
+                                  </div>
+                                </p>
+                              </div>
+                            ) : item.properties.BESCHREIBUNG &&
+                              item.properties.ZEITRAUM ? (
                               <div
                                 data-test-id={item.properties.STRNAM}
                                 className="descriptionStreets"
@@ -838,15 +1015,27 @@ export default function Map(props) {
                                 <p>
                                   {' '}
                                   <div>
-                                    <u> Description:</u>
-                                    {item.properties.BESCHREIBUNG}
-                                  </div>
-                                  <div>
-                                    <u>Time-Range:</u>
+                                    <u>Time-Range:</u> &nbsp;
                                     {item.properties.ZEITRAUM}
                                   </div>
                                   <div>
+                                    <u> Description:</u>&nbsp;&nbsp;
+                                    {item.properties.BESCHREIBUNG}
+                                  </div>
+                                  <div>
                                     {' '}
+                                    <u> Private or Public:</u> &nbsp;
+                                    {item.properties.KATEGORIE_TXT}
+                                  </div>
+                                </p>
+                              </div>
+                            ) : (
+                              <div
+                                data-test-id={item.properties.STRNAM}
+                                className="descriptionStreets"
+                              >
+                                <p>
+                                  <div>
                                     <u> Private or Public:</u> &nbsp;
                                     {item.properties.KATEGORIE_TXT}
                                   </div>
@@ -870,7 +1059,10 @@ export default function Map(props) {
                                   }}
                                   className="buttonArrow"
                                 >
-                                  &#129122;
+                                  <FontAwesomeIcon
+                                    id="arrowRight"
+                                    icon={faArrowRight}
+                                  />
                                 </button>
                               </div>
                             </div>
@@ -962,7 +1154,7 @@ export default function Map(props) {
                         value={currentReview}
                       />
                       <button
-                        css={buttons}
+                        css={postreviewButton}
                         onClick={() => {
                           newReview().catch(() => {});
                           setCurrentReview('');
@@ -999,21 +1191,33 @@ export default function Map(props) {
           </div>
         </div>
       ) : (
-        <div css={notloggedIn}>
-          <FontAwesomeIcon className="wheelchair" icon={faWheelchairMove} />
+        <div>
+          <Head>
+            <title>You are not logged in</title>
+            <meta
+              name="Parking"
+              content="Search for a parking spot with google maps"
+            />
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
+          <div css={notloggedIn}>
+            <FontAwesomeIcon className="wheelchair" icon={faWheelchairMove} />
 
-          <div className="container">
-            {' '}
-            <div className="contentContainer">
-              <h1>
-                Hey, you are currently not logged in. If you want to use all of
-                the features, please log in first.
-              </h1>
-            </div>
-            <div className="buttonContainer">
-              <Link href="/login">
-                <button css={buttonLoginFirst}>Proceed to login</button>
-              </Link>
+            <div className="container">
+              <div className="contentContainer">
+                <h1>
+                  Hey, you are currently not logged in. If you want to use all
+                  of the features, please log in first.
+                </h1>
+              </div>
+              <div className="buttonContainer">
+                <Link href="/login">
+                  <button css={buttonLoginFirst}>Login</button>
+                </Link>
+                <Link href="/login">
+                  <button css={buttonLoginFirst}>Register</button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>

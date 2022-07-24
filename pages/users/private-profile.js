@@ -11,8 +11,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { getFavorites, getUserByValidSessionToken } from '../../util/database';
 
 const mapContainerStyle = {
-  maxWidth: '100vw',
+  maxWidth: '151vw',
   minHeight: '50vh',
+  paddingRight: '20px',
 };
 
 const options = {
@@ -22,7 +23,10 @@ const options = {
 
 const mainWrapper = css`
   background-color: white;
-  width: 100vw;
+  width: 1000vw;
+  @media screen and (max-width: 950px) {
+    width: 160vw;
+  }
 `;
 
 const profilePage = css`
@@ -42,12 +46,17 @@ const profilePage = css`
     align-items: center;
     justify-content: center;
     padding-top: 80px;
+    @media screen and (max-width: 950px) {
+      width: 160vw;
+    }
     .container {
       padding-top: 20px;
 
       flex-direction: row;
-      width: 60vw;
-      height: 50vh;
+      /* width: 60vw; */
+      min-width: 63vw;
+      padding: 18px;
+      min-height: 50vh;
       background-color: rgba(137, 172, 173, 0.3);
 
       .helloWrapper {
@@ -62,8 +71,13 @@ const profilePage = css`
         .streets {
           width: 100%;
           display: grid;
-          grid-template-columns: 50% 50%;
-          justify-items: center;
+          grid-template-columns: 33% 33% 33%;
+          justify-items: left;
+          padding-left: 120px;
+          @media screen and (max-width: 950px) {
+            grid-template-columns: 50% 50%;
+            padding-left: 50px;
+          }
         }
       }
     }
@@ -77,6 +91,31 @@ const buttonstyle = css`
   color: white;
   height: 20px;
 `;
+
+const buttonDiv = css`
+  height: 35px;
+  width: 100%;
+  justify-content: center;
+  margin: auto;
+  display: flex;
+  padding-top: 20px;
+
+  .buttonClickHere {
+    background-color: #ffc80a;
+    border: none;
+    border-radius: 15px;
+    width: 9vw;
+    font-size: 18px;
+    font-weight: 600;
+    height: 35px;
+    color: white;
+    cursor: pointer;
+    &:hover {
+      background-color: #93b6b7;
+    }
+  }
+`;
+
 export default function UserDetail(props) {
   const [deleting, setDeleting] = useState(false);
 
@@ -145,24 +184,40 @@ export default function UserDetail(props) {
             content="Unfortunately, we have had trouble locating the product you are looking for."
           />
         </Head>
-        {/* <div>
-          <FontAwesomeIcon icon={faAnglesLeft} />
-          Go back
-        </div> */}
 
         <div>
-          <h1>Hello {props.user.username}</h1>
-          <div>id: {props.user.id}</div>
-          <div>
-            username: <p>{props.user.username}</p>
-          </div>
-          <p>
-            Your favorites are currently empty. If you want to add streets to
-            your favorites folder
-          </p>
-          <Link href="/map">
-            <button>Click here</button>
-          </Link>
+          <main css={mainWrapper}>
+            <GoogleMap
+              mapContainerStyle={mapContainerStyle}
+              zoom={12}
+              center={center}
+              options={options}
+              onLoad={onMapLoad}
+            >
+              {mappingMarkers}
+            </GoogleMap>
+            <div css={profilePage}>
+              <div className="containerWrapper">
+                <div className="container">
+                  <div className="helloWrapper">
+                    <h1>
+                      Hello {props.user.username} &nbsp;
+                      <FontAwesomeIcon icon={faUser} />
+                    </h1>
+                  </div>
+                  <div className="helloWrapper" style={{ fontSize: '1.4rem' }}>
+                    This is your Profile Page. Your Favorites are currently
+                    empty but if you want to add Streets to your favorites...
+                  </div>
+                  <div css={buttonDiv}>
+                    <Link href="/map">
+                      <button className="buttonClickHere">Clicke here</button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
         </div>
       </div>
     );
@@ -184,7 +239,6 @@ export default function UserDetail(props) {
         >
           {mappingMarkers}
         </GoogleMap>
-        {/* <FontAwesomeIcon icon={faAnglesLeft} /> */}
         <div css={profilePage}>
           <div className="containerWrapper">
             <div className="container">
@@ -203,14 +257,11 @@ export default function UserDetail(props) {
                   {props.favorites.map((favorite) => {
                     return (
                       <div key={favorite.id}>
-                        <ul>
-                          <li>
-                            <p>
-                              {' '}
-                              {favorite.streetname} {favorite.number}
-                            </p>
-                          </li>
-                        </ul>
+                        <p>
+                          {' '}
+                          {favorite.streetname} {favorite.number}
+                        </p>
+
                         <button
                           css={buttonstyle}
                           onClick={() => {
