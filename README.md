@@ -47,6 +47,8 @@ After registering as a new user, the user is able to browse through the 23 Distr
 
 ![Screenshot of the map page/ the actual app itself](/public/screenshots/mappage.png 'Dropdown Menu, more information of the streets and add to favorites + review area')
 
+![Screenshot of the map page/ the actual app itself](/public/screenshots/streetcard.png 'Dropdown Menu, more information of the streets and add to favorites + review area')
+
 ### Review Window
 
 ![Screenshot of the review modal](/public/screenshots/reviewwindow.png 'Modal for reviews opened')
