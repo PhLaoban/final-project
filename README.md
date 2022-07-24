@@ -41,7 +41,7 @@ After registering as a new user, the user is able to browse through the 23 Distr
 
 ### Profile Page with favorites added
 
-![Screenshot of the profile page](/public/screenshots/searchpage.jpg 'Profile page with favorites added')
+![Screenshot of the profile page](/public/screenshots/profilepagefavorites.png 'Profile page with favorites added')
 
 ### Map Page
 
@@ -49,7 +49,7 @@ After registering as a new user, the user is able to browse through the 23 Distr
 
 ### Review Window
 
-![Screenshot of the review modal](/public/screenshots/reviewwwindow.png 'Modal for reviews opened')
+![Screenshot of the review modal](/public/screenshots/reviewwindow.png 'Modal for reviews opened')
 
 ### LoginPage
 
