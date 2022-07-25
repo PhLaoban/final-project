@@ -732,7 +732,6 @@ const postreviewButton = css`
 
 export default function Map(props) {
   const [parking, setParking] = useState();
-
   const [loading, setLoading] = useState(true);
   const [checkedButton, setCheckedButton] = useState(24);
   const [lat, setLat] = useState(48.2083);
@@ -748,10 +747,7 @@ export default function Map(props) {
   const [streetName, setStreetName] = useState({});
   const [streetNameNumber, setStreetNameNumber] = useState();
 
-  console.log('streetnameNumber', streetName);
-
-  console.log('review', review);
-  console.log('sendIdtoReview', sendIdToReview);
+  // show more pagaination function, that always displays the next three parking spots or calls the back with show less.
 
   const showMoreItems = () => {
     setVisible((prevValue) => prevValue + 3);
@@ -760,6 +756,8 @@ export default function Map(props) {
   const showLessItems = () => {
     setVisible((prevValue) => prevValue - 3);
   };
+
+  // add to favorites function for single parking spots, they will be display in the profile page
 
   async function addToFavorites(item) {
     const registerResponse = await fetch('/api/favorites', {
@@ -778,9 +776,10 @@ export default function Map(props) {
     const registerResponseBody = await registerResponse.json();
     console.log('registerResponse', registerResponseBody);
     if ('errors' in registerResponseBody) {
-      // setErrors(registerResponeBody.errors);
     }
   }
+
+  // posting reviews to api and to and send it from api to database afterwards
 
   async function newReview() {
     const registerResponse = await fetch('/api/reviews', {
@@ -799,12 +798,12 @@ export default function Map(props) {
     const registerResponseBody = await registerResponse.json();
     console.log('registerResponseBody', registerResponseBody);
     if ('errors' in registerResponseBody) {
-      // setErrors(registerResponeBody.errors);
     }
 
     setReview([...review, registerResponseBody.review]);
     console.log('log from review', review);
   }
+  // loadscript function to display google maps libraries and send the googleMapsApi to the google servers
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: props.googleAPI,
@@ -813,6 +812,8 @@ export default function Map(props) {
 
   const url =
     'https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:BEHINDERTENPARKPLATZOGD&srsName=EPSG:4326&outputFormat=json';
+
+  // fetching api data with useEffect
 
   useEffect(() => {
     async function getParking() {
@@ -828,12 +829,16 @@ export default function Map(props) {
 
   console.log(loading);
 
+  // useEffect that sends value to useState hook, to display reviews without page reload
+
   useEffect(() => {
     const updatedFilteredReviews = review.filter(
       (r) => r.locationId === sendIdToReview,
     );
     setFilteredReviewsState(updatedFilteredReviews);
   }, [review, sendIdToReview]);
+
+  // loading googleMaps callback function
 
   const mapRef = useRef();
   const onMapLoad = useCallback((map) => {
@@ -842,13 +847,9 @@ export default function Map(props) {
 
   console.log('parking', parking);
 
-  const mappingDistricts =
-    parking &&
-    parking.features.map((item) => {
-      return item.properties.BEZIRK;
-    });
+  // loading screen animation
 
-  if (!mappingDistricts) {
+  if (!parking) {
     return (
       <div>
         <div css={loadingContainer}>
@@ -859,9 +860,13 @@ export default function Map(props) {
     );
   }
 
+  // filter method to see if the checked button that comes from the value of the dropdown menu where districts are saved, is the same value as the actually district? So we dont need to sort the fetched array of objects. Checked button always changes with a click on a district in dropdown.
+
   const description = parking.features.filter(
     (park) => park.properties.BEZIRK === Number(checkedButton),
   );
+
+  // return all markers with map function, that display only parking spots for districts we clicked in dropdown.
 
   const mappingMarkers = description.map((item) => {
     return (
@@ -872,6 +877,7 @@ export default function Map(props) {
             lat: item.geometry.coordinates[1],
             lng: item.geometry.coordinates[0],
           }}
+          // set zIndex so wheelchair parking sign marker and this markers dont overlap
           zIndex={-1}
           scaledSize={window.google.maps.Size(20, 20)}
         />
@@ -960,7 +966,7 @@ export default function Map(props) {
                       })
                       .slice(0, visible)
                       .map((item) => {
-                        // Ternary operator to show all the functions, with inputfield to search streetnames, and to choose streets, if on of the districts is clicked.
+                        // Ternary operator to show all the functions, with inputfields to search streetnames, and to choose streets, if one of the districts is clicked.
                         return checkedButton < 24 ? (
                           <div
                             className={
@@ -974,44 +980,11 @@ export default function Map(props) {
                             <div className="streetHeadline">
                               {item.properties.STRNAM} {item.properties.ONR_VON}
                             </div>
-                            {item.properties.BESCHREIBUNG === null &&
-                            item.properties.ZEITRAUM ? (
-                              <p>
-                                {' '}
-                                <div>
-                                  <u>Time-Range:</u> &nbsp;
-                                  {item.properties.ZEITRAUM}
-                                </div>
-                                <div>
-                                  {' '}
-                                  <u> Private or Public:</u> &nbsp;
-                                  {item.properties.KATEGORIE_TXT}
-                                </div>
-                              </p>
-                            ) : item.properties.ZEITRAUM === null &&
-                              item.properties.BESCHREIBUNG ? (
-                              <div
-                                data-test-id={item.properties.STRNAM}
-                                className="descriptionStreets"
-                              >
-                                <p>
-                                  <div>
-                                    <u> Description:</u>&nbsp;&nbsp;
-                                    {item.properties.BESCHREIBUNG}
-                                  </div>
-                                  <div>
-                                    {' '}
-                                    <u> Private or Public:</u> &nbsp;
-                                    {item.properties.KATEGORIE_TXT}
-                                  </div>
-                                </p>
-                              </div>
-                            ) : item.properties.BESCHREIBUNG &&
+
+                            {
+                              // this is the beginning of a row full of several ternary operators, since either BESCHREIBUNG OR ZEITRAUM are null or true in some of the api objects
+                              item.properties.BESCHREIBUNG === null &&
                               item.properties.ZEITRAUM ? (
-                              <div
-                                data-test-id={item.properties.STRNAM}
-                                className="descriptionStreets"
-                              >
                                 <p>
                                   {' '}
                                   <div>
@@ -1019,29 +992,66 @@ export default function Map(props) {
                                     {item.properties.ZEITRAUM}
                                   </div>
                                   <div>
-                                    <u> Description:</u>&nbsp;&nbsp;
-                                    {item.properties.BESCHREIBUNG}
-                                  </div>
-                                  <div>
                                     {' '}
                                     <u> Private or Public:</u> &nbsp;
                                     {item.properties.KATEGORIE_TXT}
                                   </div>
                                 </p>
-                              </div>
-                            ) : (
-                              <div
-                                data-test-id={item.properties.STRNAM}
-                                className="descriptionStreets"
-                              >
-                                <p>
-                                  <div>
-                                    <u> Private or Public:</u> &nbsp;
-                                    {item.properties.KATEGORIE_TXT}
-                                  </div>
-                                </p>
-                              </div>
-                            )}
+                              ) : item.properties.ZEITRAUM === null &&
+                                item.properties.BESCHREIBUNG ? (
+                                <div
+                                  data-test-id={item.properties.STRNAM}
+                                  className="descriptionStreets"
+                                >
+                                  <p>
+                                    <div>
+                                      <u> Description:</u>&nbsp;&nbsp;
+                                      {item.properties.BESCHREIBUNG}
+                                    </div>
+                                    <div>
+                                      {' '}
+                                      <u> Private or Public:</u> &nbsp;
+                                      {item.properties.KATEGORIE_TXT}
+                                    </div>
+                                  </p>
+                                </div>
+                              ) : item.properties.BESCHREIBUNG &&
+                                item.properties.ZEITRAUM ? (
+                                <div
+                                  data-test-id={item.properties.STRNAM}
+                                  className="descriptionStreets"
+                                >
+                                  <p>
+                                    {' '}
+                                    <div>
+                                      <u>Time-Range:</u> &nbsp;
+                                      {item.properties.ZEITRAUM}
+                                    </div>
+                                    <div>
+                                      <u> Description:</u>&nbsp;&nbsp;
+                                      {item.properties.BESCHREIBUNG}
+                                    </div>
+                                    <div>
+                                      {' '}
+                                      <u> Private or Public:</u> &nbsp;
+                                      {item.properties.KATEGORIE_TXT}
+                                    </div>
+                                  </p>
+                                </div>
+                              ) : (
+                                <div
+                                  data-test-id={item.properties.STRNAM}
+                                  className="descriptionStreets"
+                                >
+                                  <p>
+                                    <div>
+                                      <u> Private or Public:</u> &nbsp;
+                                      {item.properties.KATEGORIE_TXT}
+                                    </div>
+                                  </p>
+                                </div>
+                              )
+                            }
                             <div className="showMoreInfo">
                               <p className="paragraphShowMore">
                                 Show more information or write a Review
@@ -1049,6 +1059,7 @@ export default function Map(props) {
 
                               <div>
                                 <button
+                                  // button that triggers the modal with reviews to open
                                   onClick={() => {
                                     toggleModal();
                                     setSendIdToReview(item.id);
@@ -1067,6 +1078,7 @@ export default function Map(props) {
                               </div>
                             </div>
                             <button
+                              // this button sets latitude and longitude into a useState hook and returns it inside of the google Maps Marker components to display clicked spot on the Map
                               css={buttons}
                               onClick={() => {
                                 setLat(item.geometry.coordinates[1]);
@@ -1093,6 +1105,7 @@ export default function Map(props) {
                         );
                       })}
                     <div css={showMOreLessButtons}>
+                      {/* Paginator buttons */}
                       <button onClick={showMoreItems}>Show More</button>
                       <button onClick={showLessItems}>Show Less</button>
                     </div>
@@ -1104,8 +1117,6 @@ export default function Map(props) {
             </div>
 
             <div className="google">
-              {/* <PlacesAutocomplete setSelected={setSelected} /> */}
-
               <GoogleMap
                 mapContainerStyle={mapContainerStyle}
                 zoom={zoomIn}
@@ -1113,9 +1124,12 @@ export default function Map(props) {
                 options={options}
                 onLoad={onMapLoad}
               >
+                {/* returns all Markers for clicked district in the dropdown  */}
+
                 {mappingMarkers}
 
                 <MarkerF
+                  // returns one Marker with available parking space sign
                   icon={{
                     url: '/accessiblesign.svg',
                     scaledSize: new window.google.maps.Size(50, 70),
@@ -1129,7 +1143,7 @@ export default function Map(props) {
               </GoogleMap>
             </div>
           </div>
-
+          {/* beginning of review modal code that pops up  */}
           <div css={modalStyling}>
             {modal && (
               <div className="modal">
@@ -1191,6 +1205,7 @@ export default function Map(props) {
           </div>
         </div>
       ) : (
+        // if user is not logged in, show this and tell them to log in first to use all features of this app
         <div>
           <Head>
             <title>You are not logged in</title>
@@ -1234,6 +1249,7 @@ export async function getServerSideProps(context) {
   const user = await getUserByValidSessionToken(
     context.req.cookies.sessionToken,
   );
+  // if there is a user please return all necessary information, to prevent an error, when no one is signed or logged in.
 
   if (user) {
     const reviews = await getReviews(user.id);
@@ -1241,7 +1257,7 @@ export async function getServerSideProps(context) {
       props: { user, googleAPI, districts, reviews },
     };
   }
-
+  // else return this.
   return {
     props: { googleAPI, districts, reviews: [] },
   };

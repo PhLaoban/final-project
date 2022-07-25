@@ -273,18 +273,29 @@ const registerFirst = css`
   #notRegistered {
     font-size: 22px;
     font-weight: bolder;
+    @media (max-width: 700px) {
+      font-size: 20px;
+      margin-bottom: 65px;
+      gap: 1rem;
+    }
   }
 
   #createAccount {
     color: #ffe70a;
     font-size: 22px;
     cursor: pointer;
+    @media (max-width: 700px) {
+      margin-bottom: 65px;
+    }
   }
 
   #arrowright {
     color: #ffe70a;
     cursor: pointer;
     padding-top: 6px;
+    @media (max-width: 700px) {
+      margin-bottom: 45px;
+    }
   }
 `;
 

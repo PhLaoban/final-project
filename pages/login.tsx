@@ -79,7 +79,7 @@ const mainstyling = css`
         padding: 20px;
 
         @media (max-width: 600px) {
-          width: 80vw;
+          width: 90vw;
           /* height: 90vh; */
         }
       }
@@ -145,6 +145,10 @@ const mainstyling = css`
       justify-content: flex-end;
       flex-direction: column;
       height: 10vh;
+      @media (max-width: 700px) {
+        height: 7vh;
+        padding-top: 5px;
+      }
 
       .button {
         border-radius: 50%;
@@ -256,9 +260,22 @@ const registerFirst = css`
   gap: 1rem;
   padding-top: 20px;
   align-items: center;
+  padding-left: 70px;
+
+  @media (max-width: 700px) {
+    padding-top: 0;
+    gap: 1rem;
+    width: 30vw;
+    padding-bottom: 15px;
+  }
   #notRegistered {
     font-size: 22px;
     font-weight: bolder;
+    @media (max-width: 700px) {
+      font-size: 20px;
+      width: 100px;
+      margin-bottom: 65px;
+    }
   }
 
   #createAccount {
@@ -269,6 +286,11 @@ const registerFirst = css`
     &:active {
       color: white;
       transform: translateX(2) translateY(2);
+    }
+    @media (max-width: 700px) {
+      font-size: 19px;
+      width: 100px;
+      margin-bottom: 65px;
     }
   }
 

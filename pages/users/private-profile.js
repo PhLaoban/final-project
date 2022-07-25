@@ -148,11 +148,6 @@ export default function UserDetail(props) {
     setDeleting(true);
   };
 
-  // useEffect(() => {
-  //   // deleteButton(props.favorites).catch(() => {});
-  //   setDeleting(true);
-  // }, [deleting]);
-
   const mappingMarkers =
     props.favorites &&
     props.favorites.map((item) => {
@@ -171,6 +166,8 @@ export default function UserDetail(props) {
 
   if (loadError) return 'Error loading maps';
   if (!isLoaded) return 'Loading Maps';
+
+  // If favorites are empy return this:
   if (props.favorites.length === 0) {
     return (
       <div>
@@ -287,6 +284,7 @@ export async function getServerSideProps(context) {
   );
   const googleAPI = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
+  // if else to catch error when there is no user and redirect
   if (!user) {
     return {
       redirect: {
@@ -298,6 +296,7 @@ export async function getServerSideProps(context) {
 
   console.log('user', user);
 
+  // get favorites from database
   const favorites = await getFavorites(user.id);
 
   console.log('longitude', favorites);
@@ -310,10 +309,3 @@ export async function getServerSideProps(context) {
     },
   };
 }
-
-// return {
-//   redirect: {
-//     destination: `/login?returnTo=/users/private-profile`,
-//     permanent: false,
-//   },
-// };

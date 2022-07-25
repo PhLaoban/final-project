@@ -58,7 +58,6 @@ export default async function handler(
 
     const serializedCookie = await createSerializedSessionCookie(session.token);
 
-    // if you want to use username as identifier return the username too
     res
       .status(200)
       // Tells the browser to create the cookie for us

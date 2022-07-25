@@ -18,8 +18,6 @@ test('test maps', async ({ page }) => {
   await loginButton.click();
   await expect(page).toHaveURL(baseUrl);
 
-  // await expect(page).toHaveURL(`${baseUrl}/users/private-profile`);
-
   // Go to the Map page
   await page.goto(`${baseUrl}/map`);
   // Make sure to have the right title
