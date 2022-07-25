@@ -1,12 +1,10 @@
 import { css } from '@emotion/react';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { Loader } from '@googlemaps/js-api-loader';
 import { GoogleMap, MarkerF, useLoadScript } from '@react-google-maps/api';
-// import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getFavorites, getUserByValidSessionToken } from '../../util/database';
 
@@ -119,6 +117,8 @@ const buttonDiv = css`
 export default function UserDetail(props) {
   const [deleting, setDeleting] = useState(false);
 
+  const router = useRouter();
+
   console.log('favorites', props.favorites);
 
   const { isLoaded, loadError } = useLoadScript({
@@ -143,18 +143,15 @@ export default function UserDetail(props) {
       },
     });
 
-    // const router = useRouter();
-
     const deletedFavorite = await response.json();
     console.log('deletedFavorite', deletedFavorite);
     setDeleting(true);
-    // router.reload();
   };
 
-  useEffect(() => {
-    // deleteButton(props.favorites).catch(() => {});
-    setDeleting(true);
-  }, [deleting]);
+  // useEffect(() => {
+  //   // deleteButton(props.favorites).catch(() => {});
+  //   setDeleting(true);
+  // }, [deleting]);
 
   const mappingMarkers =
     props.favorites &&
@@ -266,6 +263,7 @@ export default function UserDetail(props) {
                           css={buttonstyle}
                           onClick={() => {
                             deleteButton(favorite).catch(() => {});
+                            router.reload();
                           }}
                         >
                           Delete

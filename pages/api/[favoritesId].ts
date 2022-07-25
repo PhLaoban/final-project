@@ -30,12 +30,14 @@ export default async function handler(
       return;
     }
     console.log(req.query);
-    if (typeof req.query.favoritesId !== 'string') {
-      res
-        .status(400)
-        .json({ errors: [{ message: 'Username or password not provided!' }] });
-      return;
-    }
+
+    // if (typeof req.query.favoritesId !== 'number') {
+    //   res
+    //     .status(400)
+    //     .json({ errors: [{ message: 'Username or password not provided!' }] });
+    //   return;
+    // }
+
     await removeFromFavorites(Number(req.query.favoritesId));
 
     return res.status(200);

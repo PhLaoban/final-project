@@ -10,6 +10,7 @@ jobs:
       PGDATABASE: final_project
       PGUSERNAME: final_project
       PGPASSWORD: final_project
+      REACT_APP_GOOGLE_MAPS_API_KEY: ${{ secrets.REACT_APP_GOOGLE_MAPS_API_KEY }}
 
     steps:
       - name: Start preinstalled PostgreSQL on Ubuntu
