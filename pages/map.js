@@ -144,6 +144,7 @@ const paginationDivs = css`
 
     @media (max-width: 950px) {
       width: 83%;
+      height: 59.5vh;
     }
     .streetHeadline {
       font-family: arvo;
@@ -666,6 +667,10 @@ const notloggedIn = css`
     h1 {
       font-family: Arvo;
       font-weight: 100;
+
+      @media (max-width: 700px) {
+        font-size: 26px;
+      }
     }
     box-shadow: black 0px 0px 0px 2px inset,
       rgb(255, 255, 255) 10px -10px 0px -3px, rgb(255, 217, 19) 10px -10px,

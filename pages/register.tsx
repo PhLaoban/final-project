@@ -51,12 +51,12 @@ const mainstyling = css`
   background-size: cover;
   color: white;
   @media (max-width: 700px) {
-    width: 470px;
+    width: 480px;
     margin: auto;
     padding-left: 35px;
     background-image: url('/background.jpg');
 
-    height: 1200px;
+    height: 900px;
 
     background-size: cover;
   }
@@ -131,10 +131,11 @@ const mainstyling = css`
 
     .registrationForm {
       display: flex;
-      gap: 3rem;
+      gap: 2.2rem;
       @media (max-width: 700px) {
         display: flex;
         flex-direction: column;
+        gap: 0;
       }
 
       .usernamePasswordDiv {
@@ -202,6 +203,10 @@ const mainstyling = css`
         #paperplane {
           color: white;
           font-size: 22px;
+
+          @media (max-width: 670px) {
+            margin-top: 80px;
+          }
         }
       }
     }
@@ -218,6 +223,7 @@ const easyparking = css`
   @media (max-width: 700px) {
     display: flex;
     width: 80vw;
+    padding-left: 0;
   }
   .paragraph {
     width: 60vw;
@@ -247,6 +253,7 @@ const easyparking = css`
 
     @media (max-width: 700px) {
       font-size: 25px;
+      width: 210px;
     }
   }
   #ing {
@@ -257,7 +264,9 @@ const easyparking = css`
     margin-top: 15px;
     @media (max-width: 700px) {
       font-size: 25px;
-      padding-right: 45px;
+      /* padding-right: 45px; */
+      /* width: 300px; */
+      margin-bottom: 18px;
     }
   }
 `;

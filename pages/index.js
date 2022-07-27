@@ -67,7 +67,8 @@ const mainDiv = css`
         max-width: 60vw;
       }
       p {
-        font-size: 18px;
+        font-size: 23px;
+        min-width: 25rem;
       }
     }
   }
@@ -117,6 +118,9 @@ const infoPage = css`
 
   p {
     color: #9fa3a7;
+    @media screen and (max-width: 700px) {
+      font-size: 25px;
+    }
   }
 
   h1 {
@@ -125,6 +129,7 @@ const infoPage = css`
     font-size: 30px;
     @media screen and (max-width: 700px) {
       font-family: Montserrat;
+      font-size: 35px;
     }
   }
   .numberOneTwo {
@@ -136,7 +141,15 @@ const infoPage = css`
     justify-content: center;
     background-color: #ffc80a;
     color: white;
+    align-items: center;
     font-family: Montserrat;
+
+    @media screen and (max-width: 700px) {
+      height: 2rem;
+      max-width: 2rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
   }
   .descriptionHeadline {
     display: grid;
@@ -242,7 +255,7 @@ export default function Home() {
           </div>
           <h1>How does it work?</h1>
           <p className="paragraph">
-            You can search by the district or filter by the streetname
+            You can search by a district or filter by the streetname
           </p>
           <Link href="/map">
             <button css={nextButton}>

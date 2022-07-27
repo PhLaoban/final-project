@@ -48,8 +48,13 @@ const mainstyling = css`
     width: 480px;
     background-image: url('/loginbackground.jpg');
     background-size: cover;
+    height: 900px;
     background-position: 20%;
   }
+  /*
+  @media (max-height: 670px) {
+    height: 120vh;
+  } */
 
   .content {
     display: flex;
@@ -79,8 +84,11 @@ const mainstyling = css`
         padding: 20px;
 
         @media (max-width: 600px) {
-          width: 90vw;
-          /* height: 90vh; */
+          width: 95vw;
+          height: 87vh;
+        }
+        @media (max-height: 670px) {
+          height: 97vh;
         }
       }
       #wheelchair {
@@ -110,7 +118,7 @@ const mainstyling = css`
 
     .registrationForm {
       display: flex;
-      gap: 3rem;
+      gap: 2.2rem;
       font-family: Montserrat;
 
       @media (max-width: 600px) {
@@ -121,13 +129,12 @@ const mainstyling = css`
       .usernamePasswordDiv {
         display: flex;
         flex-direction: column;
-        gap: 0.4rem;
+        gap: 0.2rem;
         font-size: 1.3rem;
         font-weight: 600;
       }
 
       #inputfields {
-        /* border-radius: 10px; */
         height: 5vh;
         color: white;
         background-color: rgba(70, 90, 96, 0.5);
@@ -192,6 +199,7 @@ const mainstyling = css`
           @media (max-width: 700px) {
             font-size: 30px;
             color: #ffba0a;
+            padding-top: 50px;
           }
         }
       }

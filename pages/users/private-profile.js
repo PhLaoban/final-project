@@ -5,7 +5,7 @@ import { GoogleMap, MarkerF, useLoadScript } from '@react-google-maps/api';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { getFavorites, getUserByValidSessionToken } from '../../util/database';
 
 const mapContainerStyle = {
@@ -30,7 +30,6 @@ const mainWrapper = css`
 const profilePage = css`
   font-family: Arvo;
 
-  /* background-image: url('/backgroundprofile.jpg'); */
   height: 70vh;
 
   p {
@@ -51,7 +50,7 @@ const profilePage = css`
       padding-top: 20px;
 
       flex-direction: row;
-      /* width: 60vw; */
+
       min-width: 63vw;
       padding: 18px;
       min-height: 50vh;
@@ -147,6 +146,7 @@ export default function UserDetail(props) {
     console.log('deletedFavorite', deletedFavorite);
     setDeleting(true);
   };
+  console.log(deleting);
 
   const mappingMarkers =
     props.favorites &&
